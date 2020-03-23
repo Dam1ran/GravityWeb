@@ -8,7 +8,7 @@ namespace GravityDAL.Interfaces
 {
     public interface IGymSessionScheduleRepository : IRepository<GymSessionSchedule>
     {
-        Task<IList<GymSessionSchedule>> GetByDayOfWeek(DayOfWeek dayOfWeek);
+        Task<IList<GymSessionSchedule>> GetByDayOfWeek(string dayOfWeek);
 
     }
 }

@@ -5,8 +5,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\Domain\Domain.csproj" />
     <ProjectReference Include="..\GravityDAL\GravityDAL.csproj" />
+    <ProjectReference Include="..\GravityDTO\GravityDTO.csproj" />
   </ItemGroup>
 
 </Project>

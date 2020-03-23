@@ -27,5 +27,6 @@ namespace GravityDAL
 
         public DbSet<GymSessionSchedule> GymSessionsSchedule { get; set; }
         public DbSet<UsefulLink> UsefulLinks { get; set; }
+        public DbSet<OurTeamMember> OurTeamMembers { get; set; }
     }
 }

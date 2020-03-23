@@ -11,18 +11,18 @@ namespace GravityDAL.Implementations
 {
     public class GymSessionScheduleRepository : Repository<GymSessionSchedule>, IGymSessionScheduleRepository
     {
-        //private readonly IGymSessionScheduleRepository _gymSessionScheduleRepository;
-
-        public GymSessionScheduleRepository(
-            GravityGymDbContext gravityGymDbContext
-           /*,IGymSessionScheduleRepository gymSessionScheduleRepository*/) : base(gravityGymDbContext)
+        
+        public GymSessionScheduleRepository(GravityGymDbContext gravityGymDbContext) : base(gravityGymDbContext)
         {
-            //_gymSessionScheduleRepository = gymSessionScheduleRepository;
+            
         }
 
-        public async Task<IList<GymSessionSchedule>> GetByDayOfWeek(DayOfWeek dayOfWeek)
+        public async Task<IList<GymSessionSchedule>> GetByDayOfWeek(string dayOfWeek)
         {
-            var listOfSessionsPerDayOfWeek = await _dbSet.Where(session => session.DayOfWeek == dayOfWeek).ToListAsync();
+            var listOfSessionsPerDayOfWeek = await _dbSet.Where(session => session.DayOfWeek == dayOfWeek)
+                .OrderBy(h=>h.Time)
+                .ThenBy(p=>p.Practice)
+                .ToListAsync();
             
             return listOfSessionsPerDayOfWeek;
         }

@@ -62,15 +62,24 @@ namespace GravityWeb
 
 
             services.AddControllers();
+
+            //helpers
+            services.AddScoped<IFileSaver,FileSaver>();
+            services.AddScoped<IGetFBImageUrlsService, GetFBImageUrlsService>();
+
+
             //repos and services
             //services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
             services.AddScoped<IGymSessionScheduleRepository, GymSessionScheduleRepository>();
             services.AddScoped<IUsefulLinksRepository, UsefulLinksRepository>();
             services.AddScoped<IUsefulLinkService, UsefulLinkService>();
+            services.AddScoped<IDayScheduleService, DayScheduleService>();
+            services.AddScoped<IOurTeamMemberRepository, OurTeamMemberRepository>();
+            services.AddScoped<IOurTeamMemberService, OurTeamMemberService>();
+
+
             //services.AddScoped<IRepository<GymSessionSchedule>, Repository<GymSessionSchedule>>();
 
-            //others
-            services.AddScoped<IFileSaver,FileSaver>();
 
             //configure strongly typed settings objects
             var appSettingsSection = Configuration.GetSection("AppSettings");

@@ -52,8 +52,9 @@ namespace GravityDAL.Migrations
                 {
                     Id = table.Column<long>(nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    DayOfWeek = table.Column<int>(nullable: false),
-                    HourMinute = table.Column<string>(nullable: true),
+                    DayOfWeek = table.Column<string>(nullable: true),
+                    Time = table.Column<string>(nullable: true),
+                    Practice = table.Column<string>(nullable: true),
                     Description = table.Column<string>(nullable: true),
                     ImageUrl = table.Column<string>(nullable: true)
                 },
