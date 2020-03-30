@@ -5,6 +5,8 @@ using System.Linq;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
+using Domain.Auth;
+using Domain.Entities;
 using GravityDTO;
 using GravityWeb.Helpers;
 using Microsoft.AspNetCore.Authorization;
@@ -20,13 +22,13 @@ namespace GravityWeb.Controllers
     [ApiController]
     public class AccountController : ControllerBase
     {
-        private readonly UserManager<IdentityUser> _userManager;
-        private readonly SignInManager<IdentityUser> _signInManager;
+        private readonly UserManager<ApplicationUser> _userManager;
+        private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly AppSettings _appsettings;
         public AccountController(
             IOptions<AppSettings> appSettings,
-            UserManager<IdentityUser> userManager,
-            SignInManager<IdentityUser> signInManager
+            UserManager<ApplicationUser> userManager,
+            SignInManager<ApplicationUser> signInManager
             )
         {
             _appsettings = appSettings.Value;
@@ -58,7 +60,7 @@ namespace GravityWeb.Controllers
                     { 
                         new Claim(JwtRegisteredClaimNames.Sub,userLoginCredentials.userEmail),
                         new Claim(JwtRegisteredClaimNames.Jti,Guid.NewGuid().ToString()),
-                        new Claim(ClaimTypes.NameIdentifier, user.Id),
+                        new Claim(ClaimTypes.NameIdentifier, user.UserName),
                         new Claim(ClaimTypes.Role, roles.FirstOrDefault()),
                         new Claim("LoggedOn",DateTime.Now.ToString())
                 
@@ -71,7 +73,6 @@ namespace GravityWeb.Controllers
                 };
 
 
-                //generate token
                 var token = tokenHandler.CreateToken(tokenDescriptor);
                 
                 return Ok(new { 
@@ -91,7 +92,7 @@ namespace GravityWeb.Controllers
         public async Task<IActionResult> Register([FromBody]UserRegisterCredentials userRegisterCredentials)
         {
 
-            var user = new IdentityUser
+            var user = new ApplicationUser
             {
                 UserName = userRegisterCredentials.userName,
                 Email = userRegisterCredentials.userEmail,

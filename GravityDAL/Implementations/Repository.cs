@@ -28,7 +28,7 @@ namespace GravityDAL.Implementations
         public async Task<T> DeleteAsync(T entity)
         {
             _gravityGymDbContext.Set<T>().Remove(entity);
-
+            
             await _gravityGymDbContext.SaveChangesAsync();
 
             return entity;
@@ -48,7 +48,7 @@ namespace GravityDAL.Implementations
 
         public async Task<IList<T>> GetAllAsync()
         {
-            return await _gravityGymDbContext.Set<T>().ToListAsync();
+            return await _gravityGymDbContext.Set<T>().AsNoTracking().ToListAsync();
         }
 
         public async Task<T> GetByIdAsync(long id)

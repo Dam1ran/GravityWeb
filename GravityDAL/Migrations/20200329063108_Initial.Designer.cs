@@ -4,14 +4,16 @@ using GravityDAL;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace GravityDAL.Migrations
 {
     [DbContext(typeof(GravityGymDbContext))]
-    partial class GravityGymDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200329063108_Initial")]
+    partial class Initial
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -315,31 +317,6 @@ namespace GravityDAL.Migrations
                     b.ToTable("OurTeamMembers");
                 });
 
-            modelBuilder.Entity("Domain.Entities.PersonalClient", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<long>("ApplicationUserId")
-                        .HasColumnType("bigint");
-
-                    b.Property<string>("Email")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(255)")
-                        .HasMaxLength(255);
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ApplicationUserId");
-
-                    b.HasIndex("Email", "ApplicationUserId")
-                        .IsUnique();
-
-                    b.ToTable("PersonalClients");
-                });
-
             modelBuilder.Entity("Domain.Entities.PersonalInfo", b =>
                 {
                     b.Property<long>("Id")
@@ -470,15 +447,6 @@ namespace GravityDAL.Migrations
                     b.HasOne("Domain.Auth.User", null)
                         .WithMany()
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("Domain.Entities.PersonalClient", b =>
-                {
-                    b.HasOne("Domain.Entities.ApplicationUser", "ApplicationUser")
-                        .WithMany("Clients")
-                        .HasForeignKey("ApplicationUserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });

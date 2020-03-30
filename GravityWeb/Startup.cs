@@ -1,29 +1,24 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using AutoMapper;
+using Domain.Auth;
+using Domain.Entities;
 using GravityDAL;
+using GravityDAL.Implementations;
+using GravityDAL.Interfaces;
+using GravityServices.Implementations;
+using GravityServices.Interfaces;
 using GravityWeb.Helpers;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
-using Microsoft.EntityFrameworkCore;
-using GravityDAL.Interfaces;
-using GravityDAL.Implementations;
-using Domain.Entities;
-using Microsoft.AspNetCore.Mvc.Authorization;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
+using System;
 using System.Text;
-using Microsoft.AspNetCore.Identity;
-using GravityServices.Interfaces;
-using GravityServices.Implementations;
 
 namespace GravityWeb
 {
@@ -47,7 +42,7 @@ namespace GravityWeb
             });
 
 
-            services.AddIdentity<IdentityUser, IdentityRole>(options=>
+            services.AddIdentity<ApplicationUser, Role>(options=>
             {
                 options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(5);
                 options.Lockout.MaxFailedAccessAttempts = 5;
@@ -69,13 +64,17 @@ namespace GravityWeb
 
 
             //repos and services
-            //services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
             services.AddScoped<IGymSessionScheduleRepository, GymSessionScheduleRepository>();
             services.AddScoped<IUsefulLinksRepository, UsefulLinksRepository>();
             services.AddScoped<IUsefulLinkService, UsefulLinkService>();
             services.AddScoped<IDayScheduleService, DayScheduleService>();
             services.AddScoped<IOurTeamMemberRepository, OurTeamMemberRepository>();
             services.AddScoped<IOurTeamMemberService, OurTeamMemberService>();
+            services.AddScoped<IPersonalInfoRepository, PersonalInfoRepository>();
+            services.AddScoped<IPersonalClientRepository, PersonalClientRepository>();
+            services.AddScoped<IPersonalInfoService, PersonalInfoService>();
+            services.AddScoped<IUserService, UserService>();
+            services.AddScoped<ICoachService, CoachService>();
 
 
             //services.AddScoped<IRepository<GymSessionSchedule>, Repository<GymSessionSchedule>>();
@@ -108,15 +107,18 @@ namespace GravityWeb
 
             services.AddAuthorization(options=>
             {
-                options.AddPolicy("RequireLoggedIn",  policy => policy.RequireRole("Client","Coach","Admin").RequireAuthenticatedUser());
+                options.AddPolicy("RequireLoggedIn",  policy => policy.RequireRole("Client","Coach","Manager","Admin").RequireAuthenticatedUser());
                 options.AddPolicy("RequireAdminRole", policy => policy.RequireRole("Admin").RequireAuthenticatedUser());
             });
+
+            services.AddAutoMapper(typeof(Startup));
 
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            
             
             if (env.IsDevelopment())
             {

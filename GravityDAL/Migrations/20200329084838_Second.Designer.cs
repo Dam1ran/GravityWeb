@@ -4,14 +4,16 @@ using GravityDAL;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace GravityDAL.Migrations
 {
     [DbContext(typeof(GravityGymDbContext))]
-    partial class GravityGymDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200329084838_Second")]
+    partial class Second
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -333,9 +335,6 @@ namespace GravityDAL.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("ApplicationUserId");
-
-                    b.HasIndex("Email", "ApplicationUserId")
-                        .IsUnique();
 
                     b.ToTable("PersonalClients");
                 });
