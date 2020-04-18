@@ -1,5 +1,6 @@
 ﻿using Domain.Auth;
 using Domain.Entities;
+using GravityDAL.DTO;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -12,9 +13,9 @@ namespace GravityDAL.Interfaces
     public interface IPersonalInfoRepository : IRepository<PersonalInfo>
     {
         Task<PersonalInfo> GetPersonalInfoByUserId(long Id);
-        IQueryable<UserRole> GetUserRoles();
-        IQueryable<PersonalInfo> GetPersonalInfos();
+        IQueryable<UserRole> GetUserRoles();        
         string GetUserRole(long roleId);
-        
+        Task<AppUserDTOsResponse> GetUsers(string filter, int aPage, int aPageSize);
+
     }
 }

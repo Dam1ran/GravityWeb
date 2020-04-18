@@ -97,79 +97,6 @@ namespace GravityDAL.Migrations
                     b.ToTable("RoleClaims","Auth");
                 });
 
-            modelBuilder.Entity("Domain.Auth.User", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<int>("AccessFailedCount")
-                        .HasColumnType("int");
-
-                    b.Property<string>("ConcurrencyStamp")
-                        .IsConcurrencyToken()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Discriminator")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Email")
-                        .HasColumnType("nvarchar(256)")
-                        .HasMaxLength(256);
-
-                    b.Property<bool>("EmailConfirmed")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("LockoutEnabled")
-                        .HasColumnType("bit");
-
-                    b.Property<DateTimeOffset?>("LockoutEnd")
-                        .HasColumnType("datetimeoffset");
-
-                    b.Property<string>("NormalizedEmail")
-                        .HasColumnType("nvarchar(256)")
-                        .HasMaxLength(256);
-
-                    b.Property<string>("NormalizedUserName")
-                        .HasColumnType("nvarchar(256)")
-                        .HasMaxLength(256);
-
-                    b.Property<string>("PasswordHash")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("PhoneNumber")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("PhoneNumberConfirmed")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("SecurityStamp")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("TwoFactorEnabled")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("UserName")
-                        .HasColumnType("nvarchar(256)")
-                        .HasMaxLength(256);
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("NormalizedEmail")
-                        .HasName("EmailIndex");
-
-                    b.HasIndex("NormalizedUserName")
-                        .IsUnique()
-                        .HasName("UserNameIndex")
-                        .HasFilter("[NormalizedUserName] IS NOT NULL");
-
-                    b.ToTable("Users","Auth");
-
-                    b.HasDiscriminator<string>("Discriminator").HasValue("User");
-                });
-
             modelBuilder.Entity("Domain.Auth.UserClaim", b =>
                 {
                     b.Property<int>("Id")
@@ -248,6 +175,101 @@ namespace GravityDAL.Migrations
                     b.ToTable("UserRoles","Auth");
                 });
 
+            modelBuilder.Entity("Domain.Entities.ApplicationUser", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("AccessFailedCount")
+                        .HasColumnType("int");
+
+                    b.Property<string>("ConcurrencyStamp")
+                        .IsConcurrencyToken()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Email")
+                        .HasColumnType("nvarchar(256)")
+                        .HasMaxLength(256);
+
+                    b.Property<bool>("EmailConfirmed")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("LockoutEnabled")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTimeOffset?>("LockoutEnd")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("NormalizedEmail")
+                        .HasColumnType("nvarchar(256)")
+                        .HasMaxLength(256);
+
+                    b.Property<string>("NormalizedUserName")
+                        .HasColumnType("nvarchar(256)")
+                        .HasMaxLength(256);
+
+                    b.Property<string>("PasswordHash")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PhoneNumber")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("PhoneNumberConfirmed")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("SecurityStamp")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("TwoFactorEnabled")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("UserName")
+                        .HasColumnType("nvarchar(256)")
+                        .HasMaxLength(256);
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("NormalizedEmail")
+                        .HasName("EmailIndex");
+
+                    b.HasIndex("NormalizedUserName")
+                        .IsUnique()
+                        .HasName("UserNameIndex")
+                        .HasFilter("[NormalizedUserName] IS NOT NULL");
+
+                    b.ToTable("Users","Auth");
+                });
+
+            modelBuilder.Entity("Domain.Entities.ExerciseTemplate", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Comments")
+                        .HasColumnType("nvarchar(200)")
+                        .HasMaxLength(200);
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(100)")
+                        .HasMaxLength(100);
+
+                    b.Property<string>("Tempo")
+                        .HasColumnType("nvarchar(10)")
+                        .HasMaxLength(10);
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Name")
+                        .IsUnique();
+
+                    b.ToTable("ExerciseTemplates");
+                });
+
             modelBuilder.Entity("Domain.Entities.GymSessionSchedule", b =>
                 {
                     b.Property<long>("Id")
@@ -273,6 +295,123 @@ namespace GravityDAL.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("GymSessionsSchedule");
+                });
+
+            modelBuilder.Entity("Domain.Entities.Muscle", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(100)")
+                        .HasMaxLength(100);
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Muscles");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1L,
+                            Name = "Calves"
+                        },
+                        new
+                        {
+                            Id = 2L,
+                            Name = "Quads"
+                        },
+                        new
+                        {
+                            Id = 3L,
+                            Name = "Hamstrings"
+                        },
+                        new
+                        {
+                            Id = 4L,
+                            Name = "Glutes"
+                        },
+                        new
+                        {
+                            Id = 5L,
+                            Name = "Abs"
+                        },
+                        new
+                        {
+                            Id = 6L,
+                            Name = "Core"
+                        },
+                        new
+                        {
+                            Id = 7L,
+                            Name = "Lower Back"
+                        },
+                        new
+                        {
+                            Id = 8L,
+                            Name = "Lats"
+                        },
+                        new
+                        {
+                            Id = 9L,
+                            Name = "Traps"
+                        },
+                        new
+                        {
+                            Id = 10L,
+                            Name = "Chest"
+                        },
+                        new
+                        {
+                            Id = 11L,
+                            Name = "Neck"
+                        },
+                        new
+                        {
+                            Id = 12L,
+                            Name = "Shoulders"
+                        },
+                        new
+                        {
+                            Id = 13L,
+                            Name = "Triceps"
+                        },
+                        new
+                        {
+                            Id = 14L,
+                            Name = "Biceps"
+                        },
+                        new
+                        {
+                            Id = 15L,
+                            Name = "Forearms"
+                        });
+                });
+
+            modelBuilder.Entity("Domain.Entities.MuscleExercise", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<long>("ExerciseTemplateId")
+                        .HasColumnType("bigint");
+
+                    b.Property<long>("MuscleId")
+                        .HasColumnType("bigint");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ExerciseTemplateId");
+
+                    b.HasIndex("MuscleId", "ExerciseTemplateId")
+                        .IsUnique();
+
+                    b.ToTable("MuscleExercises");
                 });
 
             modelBuilder.Entity("Domain.Entities.OurTeamMember", b =>
@@ -333,6 +472,8 @@ namespace GravityDAL.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("ApplicationUserId");
+
+                    b.HasIndex("Email");
 
                     b.HasIndex("Email", "ApplicationUserId")
                         .IsUnique();
@@ -405,10 +546,12 @@ namespace GravityDAL.Migrations
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("Description")
+                        .IsRequired()
                         .HasColumnType("nvarchar(200)")
                         .HasMaxLength(200);
 
                     b.Property<string>("Link")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
@@ -416,11 +559,115 @@ namespace GravityDAL.Migrations
                     b.ToTable("UsefulLinks");
                 });
 
-            modelBuilder.Entity("Domain.Entities.ApplicationUser", b =>
+            modelBuilder.Entity("Domain.Entities.WorkoutEntities.Exercise", b =>
                 {
-                    b.HasBaseType("Domain.Auth.User");
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.HasDiscriminator().HasValue("ApplicationUser");
+                    b.Property<long?>("ExerciseTemplateId")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(100)")
+                        .HasMaxLength(100);
+
+                    b.Property<int>("Order")
+                        .HasColumnType("int");
+
+                    b.Property<long>("WorkoutId")
+                        .HasColumnType("bigint");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ExerciseTemplateId");
+
+                    b.HasIndex("WorkoutId");
+
+                    b.ToTable("Exercise");
+                });
+
+            modelBuilder.Entity("Domain.Entities.WorkoutEntities.ExerciseSet", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<long>("ExerciseId")
+                        .HasColumnType("bigint");
+
+                    b.Property<int?>("NumberOfReps")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("RPE")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("RestSecondsBetweenSet")
+                        .HasColumnType("int");
+
+                    b.Property<float?>("Weight")
+                        .HasColumnType("real");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ExerciseId");
+
+                    b.ToTable("ExerciseSet");
+                });
+
+            modelBuilder.Entity("Domain.Entities.WorkoutEntities.WoRoutine", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(1000)")
+                        .HasMaxLength(1000);
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(255)")
+                        .HasMaxLength(255);
+
+                    b.HasKey("Id");
+
+                    b.ToTable("WoRoutines");
+                });
+
+            modelBuilder.Entity("Domain.Entities.WorkoutEntities.Workout", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("EstimatedMin")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Order")
+                        .HasColumnType("int");
+
+                    b.Property<long>("WoRoutineId")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("WorkoutComments")
+                        .HasColumnType("nvarchar(450)")
+                        .HasMaxLength(450);
+
+                    b.Property<DateTime?>("WorkoutDate")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("WoRoutineId");
+
+                    b.ToTable("Workout");
                 });
 
             modelBuilder.Entity("Domain.Auth.RoleClaim", b =>
@@ -434,7 +681,7 @@ namespace GravityDAL.Migrations
 
             modelBuilder.Entity("Domain.Auth.UserClaim", b =>
                 {
-                    b.HasOne("Domain.Auth.User", null)
+                    b.HasOne("Domain.Entities.ApplicationUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -443,7 +690,7 @@ namespace GravityDAL.Migrations
 
             modelBuilder.Entity("Domain.Auth.UserLogin", b =>
                 {
-                    b.HasOne("Domain.Auth.User", null)
+                    b.HasOne("Domain.Entities.ApplicationUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -458,8 +705,8 @@ namespace GravityDAL.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Domain.Auth.User", null)
-                        .WithMany()
+                    b.HasOne("Domain.Entities.ApplicationUser", null)
+                        .WithMany("Roles")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -467,9 +714,24 @@ namespace GravityDAL.Migrations
 
             modelBuilder.Entity("Domain.Auth.UserToken", b =>
                 {
-                    b.HasOne("Domain.Auth.User", null)
+                    b.HasOne("Domain.Entities.ApplicationUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Domain.Entities.MuscleExercise", b =>
+                {
+                    b.HasOne("Domain.Entities.ExerciseTemplate", "ExerciseTemplate")
+                        .WithMany("MuscleExercises")
+                        .HasForeignKey("ExerciseTemplateId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Domain.Entities.Muscle", "Muscle")
+                        .WithMany("MuscleExercises")
+                        .HasForeignKey("MuscleId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
@@ -488,6 +750,38 @@ namespace GravityDAL.Migrations
                     b.HasOne("Domain.Entities.ApplicationUser", "ApplicationUser")
                         .WithOne("PersonalInfo")
                         .HasForeignKey("Domain.Entities.PersonalInfo", "ApplicationUserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Domain.Entities.WorkoutEntities.Exercise", b =>
+                {
+                    b.HasOne("Domain.Entities.ExerciseTemplate", "ExerciseTemplate")
+                        .WithMany("Exercises")
+                        .HasForeignKey("ExerciseTemplateId")
+                        .OnDelete(DeleteBehavior.SetNull);
+
+                    b.HasOne("Domain.Entities.WorkoutEntities.Workout", "Workout")
+                        .WithMany("Exercises")
+                        .HasForeignKey("WorkoutId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Domain.Entities.WorkoutEntities.ExerciseSet", b =>
+                {
+                    b.HasOne("Domain.Entities.WorkoutEntities.Exercise", null)
+                        .WithMany("ExerciseSets")
+                        .HasForeignKey("ExerciseId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Domain.Entities.WorkoutEntities.Workout", b =>
+                {
+                    b.HasOne("Domain.Entities.WorkoutEntities.WoRoutine", null)
+                        .WithMany("Workouts")
+                        .HasForeignKey("WoRoutineId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });

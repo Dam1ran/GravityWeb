@@ -23,6 +23,7 @@ namespace GravityDAL.Implementations
             _gravityGymDbContext.Set<T>().Add(entity);
             await _gravityGymDbContext.SaveChangesAsync();
             return entity;
+            
         }
 
         public async Task<T> DeleteAsync(T entity)

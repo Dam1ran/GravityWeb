@@ -1,11 +1,12 @@
 ﻿using Domain.Auth;
 using Domain.Entities;
+using Domain.Entities.WorkoutEntities;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace GravityDAL
 {
-    public class GravityGymDbContext : IdentityDbContext<User,Role,long,UserClaim,UserRole,UserLogin,RoleClaim,UserToken>
+    public class GravityGymDbContext : IdentityDbContext<ApplicationUser, Role,long,UserClaim,UserRole,UserLogin,RoleClaim,UserToken>
     {
         public GravityGymDbContext(DbContextOptions<GravityGymDbContext> options) : base(options)
         {
@@ -36,11 +37,15 @@ namespace GravityDAL
         public DbSet<OurTeamMember> OurTeamMembers { get; set; }
         public DbSet<PersonalInfo>  PersonalInfos { get; set; }
         public DbSet<PersonalClient> PersonalClients { get; set; }
+        public DbSet<ExerciseTemplate> ExerciseTemplates { get; set; }
+        public DbSet<Muscle> Muscles { get; set; }
+        public DbSet<MuscleExercise> MuscleExercises { get; set; }
+        public DbSet<WoRoutine> WoRoutines  { get; set; }
         
         
         private void ApplyIdentityMapConfiguration(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<User>().ToTable("Users", "Auth");
+            modelBuilder.Entity<ApplicationUser>().ToTable("Users", "Auth");
             modelBuilder.Entity<UserClaim>().ToTable("UserClaims", "Auth");
             modelBuilder.Entity<UserLogin>().ToTable("UserLogins", "Auth");
             modelBuilder.Entity<UserToken>().ToTable("UserRoles", "Auth");
@@ -53,9 +58,60 @@ namespace GravityDAL
                 .WithOne(x => x.ApplicationUser)
                 .HasForeignKey<PersonalInfo>(x => x.ApplicationUserId);
 
+            modelBuilder.Entity<ApplicationUser>()
+                .HasMany(x => x.Roles)
+                .WithOne()
+                .HasForeignKey(x => x.UserId);
+
             modelBuilder.Entity<PersonalClient>().HasIndex(p => new { p.Email, p.ApplicationUserId }).IsUnique();
 
+            modelBuilder.Entity<PersonalClient>().HasIndex(p => new { p.Email});
+
+            modelBuilder.Entity<Muscle>().HasData
+                (
+                    new Muscle { Id=1L, Name="Calves"},
+                    new Muscle { Id=2L, Name="Quads"},
+                    new Muscle { Id=3L, Name="Hamstrings"},
+                    new Muscle { Id=4L, Name="Glutes"},
+                    new Muscle { Id=5L, Name="Abs"},
+                    new Muscle { Id=6L, Name="Core"},
+                    new Muscle { Id=7L, Name="Lower Back"},
+                    new Muscle { Id=8L, Name="Lats"},
+                    new Muscle { Id=9L, Name="Traps"},
+                    new Muscle { Id=10L, Name="Chest"},
+                    new Muscle { Id=11L, Name="Neck"},
+                    new Muscle { Id=12L, Name="Shoulders"},
+                    new Muscle { Id=13L, Name="Triceps"},
+                    new Muscle { Id=14L, Name="Biceps"},
+                    new Muscle { Id=15L, Name="Forearms"}
+
+                );
+
+            modelBuilder.Entity<MuscleExercise>()
+                .HasOne(x=>x.ExerciseTemplate)
+                .WithMany(x=>x.MuscleExercises)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<MuscleExercise>()
+                .HasOne(x => x.Muscle)
+                .WithMany(x => x.MuscleExercises)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<MuscleExercise>().HasIndex(p => new { p.MuscleId, p.ExerciseTemplateId }).IsUnique();
+
+            modelBuilder.Entity<ExerciseTemplate>().HasIndex(x => x.Name).IsUnique();
+
+            modelBuilder.Entity<ExerciseTemplate>()
+                .HasMany(x => x.Exercises)
+                .WithOne(x => x.ExerciseTemplate)
+                .OnDelete(DeleteBehavior.SetNull);
+
+            modelBuilder.Entity<Exercise>()
+                .HasOne(x => x.Workout)
+                .WithMany(x => x.Exercises)
+                .OnDelete(DeleteBehavior.Cascade);          
+
         }
-        
+
     }
 }

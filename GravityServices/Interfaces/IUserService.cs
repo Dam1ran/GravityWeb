@@ -9,8 +9,7 @@ using System.Threading.Tasks;
 namespace GravityServices.Interfaces
 {
     public interface IUserService
-    {
-        Task<UserDTOsResponse> GetUsers(string filter,int aPage, int aPageSize);
+    {        
         Task<bool> UpdateRole(string userEmail, long roleId);
 
     }

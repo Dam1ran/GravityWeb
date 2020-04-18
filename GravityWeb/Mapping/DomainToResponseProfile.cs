@@ -1,10 +1,8 @@
 ﻿using AutoMapper;
 using Domain.Entities;
+using Domain.Entities.WorkoutEntities;
 using GravityDTO;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using GravityDTO.WORoutine;
 
 namespace GravityWeb.Mapping
 {
@@ -14,6 +12,9 @@ namespace GravityWeb.Mapping
         {
             CreateMap<PersonalInfo, PersonalInfoDTO>();
             CreateMap<PersonalInfoDTO, PersonalInfo>();//.ForMember(dest=>dest.,act=>act.Ignore());
+            CreateMap<WoRoutine, WoRoutineDTO>();
+            CreateMap<Workout, WorkoutDTO>();
+            CreateMap<WorkoutDTO, Workout>();
         }
     }
 }

@@ -29,7 +29,7 @@ namespace GravityServices.Implementations
 
         public async Task<ApplicationUser> AddPersonalClient(string coachEmail,string clientEmail)
         {
-            if (string.IsNullOrEmpty(coachEmail) && string.IsNullOrEmpty(clientEmail))
+            if (string.IsNullOrEmpty(coachEmail) || string.IsNullOrEmpty(clientEmail))
             {
                 return null;
             }
@@ -115,6 +115,28 @@ namespace GravityServices.Implementations
             }
 
             return user;
+        }
+
+        public async Task<IList<ClientDTO>> GetPersonalClients(string coachEmail)
+        {
+            var coach = await _userManager.FindByEmailAsync(coachEmail);
+
+            var coachClients = _personalClientRepository.GetPersonalClients(coach.Id);
+
+            var coachClientsInfo = await coachClients
+                .Join(_userManager.Users,
+                        ccl => ccl.Email,
+                        u => u.Email,
+                        (c, u) => new ClientDTO 
+                        { 
+                            Id = u.Id,
+                            Email = u.Email,
+                            FirstName = u.PersonalInfo.FirstName??" -First Name- ",
+                            LastName = u.PersonalInfo.LastName??" -Last Name- "
+                        }).ToListAsync();
+
+            return coachClientsInfo;
+
         }
     }
 }

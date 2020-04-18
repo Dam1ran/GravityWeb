@@ -17,8 +17,11 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
+using Swashbuckle.AspNetCore.Swagger;
 using System;
 using System.Text;
+using SwaggerOptions = GravityWeb.Helpers.SwaggerOptions;
 
 namespace GravityWeb
 {
@@ -52,8 +55,8 @@ namespace GravityWeb
             }).AddEntityFrameworkStores<GravityGymDbContext>().AddDefaultTokenProviders();
 
 
-            services.AddCors(options=>options.AddPolicy("Cors",builder=>
-                builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader()));
+            //services.AddCors(options=>options.AddPolicy("Cors",builder=>
+            //    builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader()));
 
 
             services.AddControllers();
@@ -73,6 +76,13 @@ namespace GravityWeb
             services.AddScoped<IPersonalInfoRepository, PersonalInfoRepository>();
             services.AddScoped<IPersonalClientRepository, PersonalClientRepository>();
             services.AddScoped<IPersonalInfoService, PersonalInfoService>();
+            services.AddScoped<IExerciseTemplateRepository, ExerciseTemplateRepository>();
+            services.AddScoped<IMuscleRepository, MuscleRepository>();
+            services.AddScoped<IMuscleExerciseRepository, MuscleExerciseRepository>();
+            services.AddScoped<IExerciseTemplateService, ExerciseTemplateService>();
+            services.AddScoped<IWoRoutineRepository, WoRoutineRepository>();
+            services.AddScoped<IWoRoutineService, WoRoutineService>();
+            services.AddScoped<IWorkoutRepository, WorkoutRepository>();
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<ICoachService, CoachService>();
 
@@ -109,9 +119,15 @@ namespace GravityWeb
             {
                 options.AddPolicy("RequireLoggedIn",  policy => policy.RequireRole("Client","Coach","Manager","Admin").RequireAuthenticatedUser());
                 options.AddPolicy("RequireAdminRole", policy => policy.RequireRole("Admin").RequireAuthenticatedUser());
+                options.AddPolicy("RequireCoachRole", policy => policy.RequireRole("Coach").RequireAuthenticatedUser());
             });
 
             services.AddAutoMapper(typeof(Startup));
+
+            services.AddSwaggerGen(g=> 
+            {
+                g.SwaggerDoc("v1", new OpenApiInfo { Title = "Gravity Site API", Version = "v1" });
+            });
 
         }
 
@@ -129,7 +145,20 @@ namespace GravityWeb
                 app.UseHsts();
             }
 
-            app.UseCors("Cors");
+            var swaggerOptions = new SwaggerOptions();
+            Configuration.GetSection(nameof(SwaggerOptions)).Bind(swaggerOptions);
+
+            app.UseSwagger(opt =>
+            {
+                opt.RouteTemplate = swaggerOptions.JsonRoute;
+            });
+
+            app.UseSwaggerUI(opt=> 
+            {
+                opt.SwaggerEndpoint(swaggerOptions.UIEndpoint,swaggerOptions.Description);
+            });
+
+            //app.UseCors("Cors");
 
             app.UseHttpsRedirection();
 

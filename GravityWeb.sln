@@ -11,7 +11,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Domain", "Domain\Domain.csp
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GravityServices", "GravityServices\GravityServices.csproj", "{63DF9491-C398-49F1-9363-824D5DE368B0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GravityDTO", "GravityDTO\GravityDTO.csproj", "{413A382C-90FA-4DF6-BBFB-492047157A71}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GravityDTO", "GravityDTO\GravityDTO.csproj", "{413A382C-90FA-4DF6-BBFB-492047157A71}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GravityWebTest", "GravityWebTest\GravityWebTest.csproj", "{4E913C77-8F39-42C5-B50A-30E799D691CB}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -39,6 +41,10 @@ Global
 		{413A382C-90FA-4DF6-BBFB-492047157A71}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{413A382C-90FA-4DF6-BBFB-492047157A71}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{413A382C-90FA-4DF6-BBFB-492047157A71}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4E913C77-8F39-42C5-B50A-30E799D691CB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4E913C77-8F39-42C5-B50A-30E799D691CB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4E913C77-8F39-42C5-B50A-30E799D691CB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4E913C77-8F39-42C5-B50A-30E799D691CB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
