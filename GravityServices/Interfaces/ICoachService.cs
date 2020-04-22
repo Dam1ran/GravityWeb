@@ -10,7 +10,7 @@ namespace GravityServices.Interfaces
         Task<IList<CoachDTO>> GetCoachesAsync();
         Task<ApplicationUser> AddPersonalClient(string coachEmail, string clientEmail);
         Task<IList<ClientDTO>> GetPersonalClients(string coachEmail);
-        Task<ApplicationUser> RemovePersonalClientsFromCoach(string coachEmail);
-        Task<ApplicationUser> RemovePersonalClientsFromCoach(string coachEmail, string clientEmail);
+        Task<bool> RemoveAllPersonalClientsFromCoach(string coachEmail);
+        Task<bool> RemovePersonalClientFromCoach(string coachEmail, string clientEmail);
     }
 }

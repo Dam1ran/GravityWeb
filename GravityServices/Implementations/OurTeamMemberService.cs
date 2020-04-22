@@ -37,12 +37,8 @@ namespace GravityServices.Implementations
                     Moto = ourTeamMemberData.moto
                 };
 
-                var dbTeamMember = await _ourTeamMemberRepository.AddAsync(teamMember);
-
-                if (dbTeamMember != null)
-                {
-                    return dbTeamMember;
-                }
+                return await _ourTeamMemberRepository.AddAsync(teamMember);
+                
             }
 
             return null;

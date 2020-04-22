@@ -7,9 +7,10 @@ namespace Domain.Entities
 {
     public class ApplicationUser : User
     {       
-        public virtual PersonalInfo PersonalInfo { get; set; }
-        public virtual IList<PersonalClient> Clients { get; set; }
-        public virtual IList<UserRole> Roles { get; set; }
+        public PersonalInfo PersonalInfo { get; set; }
+        public IList<UserRole> Roles { get; set; }
+        public AppUserCoach Coach { get; set; }        
+        public IList<AppUserCoach> PersonalClients { get; set; }        
 
         //public virtual IList<WOProgramm> WOProgramms { get; set; }
     }

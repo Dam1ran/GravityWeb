@@ -28,18 +28,13 @@ namespace GravityServices.Implementations
         {
             var personalInfo = await _personalInfoRepository.GetPersonalInfoByUserId(Id);
 
-            var personalInfoDTO = new PersonalInfoDTO();
-
             if (personalInfo == null)
             {               
-                return personalInfoDTO;
+                return new PersonalInfoDTO();
             }
             else
             {
-
-                personalInfoDTO = _mapper.Map<PersonalInfoDTO>(personalInfo);
-
-                return personalInfoDTO;
+                return _mapper.Map<PersonalInfoDTO>(personalInfo);
             }
         }
 

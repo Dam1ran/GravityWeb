@@ -1,10 +1,9 @@
-﻿using Domain.Entities;
+﻿using AutoMapper;
+using Domain.Entities;
 using GravityDAL.Interfaces;
 using Microsoft.EntityFrameworkCore;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace GravityDAL.Implementations
@@ -12,7 +11,7 @@ namespace GravityDAL.Implementations
     public class GymSessionScheduleRepository : Repository<GymSessionSchedule>, IGymSessionScheduleRepository
     {
         
-        public GymSessionScheduleRepository(GravityGymDbContext gravityGymDbContext) : base(gravityGymDbContext)
+        public GymSessionScheduleRepository(GravityGymDbContext gravityGymDbContext, IMapper mapper) : base(gravityGymDbContext, mapper)
         {
             
         }

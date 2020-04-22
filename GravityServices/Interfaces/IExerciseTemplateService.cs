@@ -1,7 +1,5 @@
-﻿using GravityDTO;
-using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using GravityDAL.PageModels;
+using GravityDTO;
 using System.Threading.Tasks;
 
 namespace GravityServices.Interfaces
@@ -10,7 +8,6 @@ namespace GravityServices.Interfaces
     {
         Task<bool> SaveAsync(ExerciseTemplateDTO exerciseTemplateDTO);
         Task<bool> DeleteAsync(long Id);
-        Task<ExerciseTemplateDTOresponse> GetAllETs(ExerciseTemplateRequest exerciseTemplateRequest);
-        
+        Task<PaginatedResult<ExerciseTemplateDTO>> GetExerciseTemplates(PaginatedRequest pagedRequest);        
     }
 }

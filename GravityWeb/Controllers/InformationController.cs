@@ -12,6 +12,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
 namespace GravityWeb.Controllers
@@ -25,10 +26,10 @@ namespace GravityWeb.Controllers
         private readonly IDayScheduleService _dayScheduleService;
         private readonly IGymSessionScheduleRepository _gymSessionScheduleRepository;
         private readonly IUsefulLinksRepository _usefulLinksRepository;
-        private readonly IUsefulLinkService _usefulLinkService;
         private readonly IOurTeamMemberService _ourTeamMemberService;
         private readonly IOurTeamMemberRepository _ourTeamMemberRepository;
         private readonly IGetFBImageUrlsService _getFBImageUrlsService;
+        private readonly ILogger<InformationController> _logger;
         private readonly AppSettings _appsettings;
 
 
@@ -37,22 +38,22 @@ namespace GravityWeb.Controllers
             IDayScheduleService dayScheduleService,
             IGymSessionScheduleRepository gymSessionScheduleRepository,
             IUsefulLinksRepository usefulLinksRepository,
-            IUsefulLinkService usefulLinkService,
             IOurTeamMemberService ourTeamMemberService,
             IOurTeamMemberRepository ourTeamMemberRepository,
             IOptions<AppSettings> appSettings,
-            IGetFBImageUrlsService getFBImageUrlsService
+            IGetFBImageUrlsService getFBImageUrlsService,
+            ILogger<InformationController> logger
             )
         {
             _environment = environment;
             _dayScheduleService = dayScheduleService;
             _gymSessionScheduleRepository = gymSessionScheduleRepository;
             _usefulLinksRepository = usefulLinksRepository;
-            _usefulLinkService = usefulLinkService;
             _ourTeamMemberService = ourTeamMemberService;
             _ourTeamMemberRepository = ourTeamMemberRepository;
             _getFBImageUrlsService = getFBImageUrlsService;
             _appsettings = appSettings.Value;
+            _logger = logger;
         }
         #endregion
 
@@ -94,8 +95,7 @@ namespace GravityWeb.Controllers
         [HttpGet("scheduleforday/{dayOfWeek}")]
         public async Task<IActionResult> Get(string dayOfWeek)
         {            
-            var listOfActivitiesForRespectiveDay = await _gymSessionScheduleRepository.GetByDayOfWeek(dayOfWeek);
-            return Ok(listOfActivitiesForRespectiveDay); 
+            return Ok(await _gymSessionScheduleRepository.GetByDayOfWeek(dayOfWeek)); 
         }
 
         
@@ -103,32 +103,31 @@ namespace GravityWeb.Controllers
         [Authorize(Policy = "RequireLoggedIn")]
         public async Task<IActionResult> Links()
         {           
-
             return Ok(await _usefulLinksRepository.GetAllAsync());
-
         }
 
         [HttpDelete("deletelink/{Id}")]
-        [Authorize(Policy = "RequireAdminRole")]
+        [Authorize(Policy = "RequireCoachRole")]
         public async Task<IActionResult> Delete(int Id)
         {
-            var link =  await _usefulLinksRepository.GetByIdAsync(Id);
-            if (link != null)
+            try
             {
-                await _usefulLinksRepository.DeleteAsync(link);
-
+                await _usefulLinksRepository.DeleteAsync(Id);
                 return Ok();
             }
-
-            return BadRequest();
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                return BadRequest();
+            }
 
         }
 
         [HttpPost("postlink")]
-        [Authorize(Policy = "RequireAdminRole")]
+        [Authorize(Policy = "RequireCoachRole")]
         public async Task<IActionResult> PostLink([FromBody]UsefulLink usefulLink)
         {
-            var link = await _usefulLinkService.SaveAsync(usefulLink);
+            var link = await _usefulLinksRepository.AddAsync(usefulLink);
             
             if (link != null)
             {

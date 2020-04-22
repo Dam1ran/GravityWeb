@@ -4,14 +4,16 @@ using GravityDAL;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace GravityDAL.Migrations
 {
     [DbContext(typeof(GravityGymDbContext))]
-    partial class GravityGymDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200418212850_sixteenth")]
+    partial class sixteenth
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -282,12 +284,6 @@ namespace GravityDAL.Migrations
                         .HasColumnType("nvarchar(100)")
                         .HasMaxLength(100);
 
-                    b.Property<long?>("PrimaryMuscleId")
-                        .HasColumnType("bigint");
-
-                    b.Property<long?>("SecondaryMuscleId")
-                        .HasColumnType("bigint");
-
                     b.Property<string>("Tempo")
                         .HasColumnType("nvarchar(10)")
                         .HasMaxLength(10);
@@ -296,10 +292,6 @@ namespace GravityDAL.Migrations
 
                     b.HasIndex("Name")
                         .IsUnique();
-
-                    b.HasIndex("PrimaryMuscleId");
-
-                    b.HasIndex("SecondaryMuscleId");
 
                     b.ToTable("ExerciseTemplates");
                 });
@@ -423,6 +415,29 @@ namespace GravityDAL.Migrations
                             Id = 15L,
                             Name = "Forearms"
                         });
+                });
+
+            modelBuilder.Entity("Domain.Entities.MuscleExercise", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<long>("ExerciseTemplateId")
+                        .HasColumnType("bigint");
+
+                    b.Property<long>("MuscleId")
+                        .HasColumnType("bigint");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ExerciseTemplateId");
+
+                    b.HasIndex("MuscleId", "ExerciseTemplateId")
+                        .IsUnique();
+
+                    b.ToTable("MuscleExercises");
                 });
 
             modelBuilder.Entity("Domain.Entities.OurTeamMember", b =>
@@ -720,15 +735,19 @@ namespace GravityDAL.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Domain.Entities.ExerciseTemplate", b =>
+            modelBuilder.Entity("Domain.Entities.MuscleExercise", b =>
                 {
-                    b.HasOne("Domain.Entities.Muscle", "PrimaryMuscle")
-                        .WithMany()
-                        .HasForeignKey("PrimaryMuscleId");
+                    b.HasOne("Domain.Entities.ExerciseTemplate", "ExerciseTemplate")
+                        .WithMany("MuscleExercises")
+                        .HasForeignKey("ExerciseTemplateId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
-                    b.HasOne("Domain.Entities.Muscle", "SecondaryMuscle")
-                        .WithMany()
-                        .HasForeignKey("SecondaryMuscleId");
+                    b.HasOne("Domain.Entities.Muscle", "Muscle")
+                        .WithMany("MuscleExercises")
+                        .HasForeignKey("MuscleId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("Domain.Entities.PersonalInfo", b =>

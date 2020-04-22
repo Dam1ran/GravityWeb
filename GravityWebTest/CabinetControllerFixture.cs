@@ -64,7 +64,6 @@ namespace GravityWebTest
             var _exerciseTemplateServiceMock = new Mock<IExerciseTemplateService>();
             var _muscleRepositoryMock = new Mock<IMuscleRepository>();
             var _worserviceMock = new Mock<IWoRoutineService>();
-            var _muscleExerciseRepositoryMock = new Mock<IMuscleExerciseRepository>();
             
             var cabinetController = new CabinetController(                
                 _userManagerMock.Object,

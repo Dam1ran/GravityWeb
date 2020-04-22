@@ -11,6 +11,5 @@ namespace Domain.Entities
         [MinLength(3)]
         [Required]
         public string Name { get; set; }       
-        public virtual IList<MuscleExercise>  MuscleExercises { get; set; }
     }
 }

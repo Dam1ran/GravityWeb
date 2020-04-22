@@ -15,6 +15,14 @@ namespace GravityWeb.Mapping
             CreateMap<WoRoutine, WoRoutineDTO>();
             CreateMap<Workout, WorkoutDTO>();
             CreateMap<WorkoutDTO, Workout>();
+            //CreateMap<ExerciseTemplate, ExerciseTemplateDTO>();
+            CreateMap<ExerciseTemplate, ExerciseTemplateDTO>()
+                .ForMember(x=>x.PrimaryMuscle, y=>y.MapFrom(z=>z.PrimaryMuscle.Name))
+                .ForMember(x => x.SecondaryMuscle, y => y.MapFrom(z => z.SecondaryMuscle.Name));
+
+            CreateMap<ExerciseTemplateDTO,ExerciseTemplate>()
+                .ForMember(x=>x.PrimaryMuscle, act=>act.Ignore())
+                .ForMember(x=>x.SecondaryMuscle, act=>act.Ignore());
         }
     }
 }

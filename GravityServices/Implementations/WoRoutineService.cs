@@ -71,26 +71,14 @@ namespace GravityServices.Implementations
         {
             var deleted = await _woRoutineRepository.DeleteAsync(Id);
 
-            if (deleted != null)
-            {
-                return true;
-            }
-
-            return false;
+            return deleted != null;
         }
 
         public async Task<WoRoutineDTO> GetRoutine(long Id)
         {
-            var result = await _woRoutineRepository.GetByIdWithInclude(Id);
+            var result = await _woRoutineRepository.GetByIdWithInclude(Id, x=>x.Workouts);
 
-            if (result != null)
-            {
-                var woRoutineDTO = _mapper.Map<WoRoutineDTO>(result);
-
-                return woRoutineDTO;
-            }
-
-            return null;
+            return _mapper.Map<WoRoutineDTO>(result);
 
         }
 
@@ -98,29 +86,24 @@ namespace GravityServices.Implementations
         {
             var routines = await _woRoutineRepository.GetAllAsync();
 
-            var result = routines.Select(x=> new WoRoutineNameDTO { Id=x.Id, Title=x.Title }).ToList();
-
-            return result;
+            return routines.Select(x=> new WoRoutineNameDTO { Id=x.Id, Title=x.Title }).ToList();
 
         }
 
         public async Task<WorkoutDTO> UpdateWorkoutDescription(WorkoutDTO workoutDTO)
         {
-           
+            var routine = await _woRoutineRepository.GetByIdWithInclude(workoutDTO.WoRoutineId, x=>x.Workouts);
 
-            var routine = await _woRoutineRepository.GetByIdWithInclude(workoutDTO.WoRoutineId);
+            var workout = routine.Workouts                
+                .FirstOrDefault(w => w.WoRoutineId == workoutDTO.WoRoutineId && w.Order == workoutDTO.Order);
 
-            var workout = routine.Workouts
-                .Where(w => w.WoRoutineId == workoutDTO.WoRoutineId && w.Order==workoutDTO.Order)
-                .FirstOrDefault();
             workout.WorkoutComments = workoutDTO.WorkoutComments;
             workout.Order = workoutDTO.Order;
             
             try
             {
-                await _workoutRepository.SaveChangesAsync();
-                
-                return _mapper.Map<WorkoutDTO>(routine.Workouts.Where(w => w.WoRoutineId == workoutDTO.WoRoutineId && w.Order == workoutDTO.Order).FirstOrDefault());
+                await _workoutRepository.SaveChangesAsync();                
+                return _mapper.Map<WorkoutDTO>(routine.Workouts.FirstOrDefault(w => w.WoRoutineId == workoutDTO.WoRoutineId && w.Order == workoutDTO.Order));
             }
             catch (Exception ex)
             {
@@ -133,29 +116,20 @@ namespace GravityServices.Implementations
         public async Task<WorkoutDTO> GetWorkout(long id)
         {
             var workout = await _workoutRepository.GetByIdAsync(id);
-            if (workout!=null)
-            {
-                return _mapper.Map<WorkoutDTO>(workout);
-            }
 
-            return null;
+            return _mapper.Map<WorkoutDTO>(workout);
         }
 
         public async Task<bool> DeleteWorkout(long Id)
         {
             var deleted = await _workoutRepository.DeleteAsync(Id);
 
-            if (deleted != null)
-            {
-                return true;
-            }
-
-            return false;
+            return deleted != null;
         }
 
         public async Task<WorkoutDTO> DeleteLastWorkoutFromRoutine(long Id)
         {
-            var routine = await _woRoutineRepository.GetByIdWithInclude(Id);
+            var routine = await _woRoutineRepository.GetByIdWithInclude(Id, x => x.Workouts);
             if (routine!=null)
             {
                 var workout = routine.Workouts.OrderBy(x=>x.Order).LastOrDefault();                

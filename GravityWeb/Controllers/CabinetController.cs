@@ -6,6 +6,7 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using Domain.Entities;
 using GravityDAL.Interfaces;
+using GravityDAL.PageModels;
 using GravityDTO;
 using GravityDTO.WORoutine;
 using GravityServices.Interfaces;
@@ -155,9 +156,9 @@ namespace GravityWeb.Controllers
         public async Task<IActionResult> UnassignCoach([FromBody]ActionCoachDTO actionCoachDTO)
         {
 
-            var user = await _coachService.RemovePersonalClientsFromCoach(actionCoachDTO.coachEmail,actionCoachDTO.clientEmail);
+            var result = await _coachService.RemovePersonalClientFromCoach(actionCoachDTO.coachEmail,actionCoachDTO.clientEmail);
 
-            if (user != null)
+            if (result)
             {
                 return Ok();
             }
@@ -184,17 +185,15 @@ namespace GravityWeb.Controllers
             var result = await _exerciseTemplateService.SaveAsync(exerciseTemplateDTO);
 
             return Ok(new { Saved = result });
-
         }
 
         [HttpPost("getexercisetemplates")]
         [Authorize(Policy = "RequireCoachRole")]
-        public async Task<IActionResult> GetExerciseTemplates([FromBody]ExerciseTemplateRequest exerciseTemplateRequest)
+        public async Task<IActionResult> GetExerciseTemplates([FromBody]PaginatedRequest paginatedRequest)
         {
-            var result = await _exerciseTemplateService.GetAllETs(exerciseTemplateRequest);
+            var result = await _exerciseTemplateService.GetExerciseTemplates(paginatedRequest);
 
             return Ok(result);
-
         }
 
         [HttpGet("getmuscles")]
@@ -315,15 +314,6 @@ namespace GravityWeb.Controllers
             }
 
             return BadRequest();
-
-        }
-
-        [HttpGet("test")]
-        public async Task<IActionResult> test()
-        {
-            var result = await _personalInfoRepository.GetUsers(null,1,20);
-
-            return Ok(result);
 
         }
 

@@ -13,7 +13,6 @@ namespace GravityDAL.Interfaces
     public interface IPersonalInfoRepository : IRepository<PersonalInfo>
     {
         Task<PersonalInfo> GetPersonalInfoByUserId(long Id);
-        IQueryable<UserRole> GetUserRoles();        
         string GetUserRole(long roleId);
         Task<AppUserDTOsResponse> GetUsers(string filter, int aPage, int aPageSize);
 

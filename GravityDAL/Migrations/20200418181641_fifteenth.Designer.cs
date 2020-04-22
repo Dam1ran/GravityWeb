@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace GravityDAL.Migrations
 {
     [DbContext(typeof(GravityGymDbContext))]
-    [Migration("20200418052936_fifteenth")]
+    [Migration("20200418181641_fifteenth")]
     partial class fifteenth
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -175,6 +175,30 @@ namespace GravityDAL.Migrations
                     b.HasKey("UserId", "LoginProvider", "Name");
 
                     b.ToTable("UserRoles","Auth");
+                });
+
+            modelBuilder.Entity("Domain.Entities.AppUserCoach", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<long>("ApplicationUserId")
+                        .HasColumnType("bigint");
+
+                    b.Property<long>("CoachId")
+                        .HasColumnType("bigint");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ApplicationUserId")
+                        .IsUnique();
+
+                    b.HasIndex("CoachId", "ApplicationUserId")
+                        .IsUnique();
+
+                    b.ToTable("AppUserCoaches");
                 });
 
             modelBuilder.Entity("Domain.Entities.ApplicationUser", b =>
@@ -723,6 +747,21 @@ namespace GravityDAL.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("Domain.Entities.AppUserCoach", b =>
+                {
+                    b.HasOne("Domain.Entities.ApplicationUser", "ApplicationUser")
+                        .WithOne("Coach")
+                        .HasForeignKey("Domain.Entities.AppUserCoach", "ApplicationUserId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Domain.Entities.ApplicationUser", "Coach")
+                        .WithMany("PersonalClients")
+                        .HasForeignKey("CoachId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("Domain.Entities.MuscleExercise", b =>
                 {
                     b.HasOne("Domain.Entities.ExerciseTemplate", "ExerciseTemplate")
@@ -741,7 +780,7 @@ namespace GravityDAL.Migrations
             modelBuilder.Entity("Domain.Entities.PersonalClient", b =>
                 {
                     b.HasOne("Domain.Entities.ApplicationUser", "ApplicationUser")
-                        .WithMany("Clients")
+                        .WithMany()
                         .HasForeignKey("ApplicationUserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();

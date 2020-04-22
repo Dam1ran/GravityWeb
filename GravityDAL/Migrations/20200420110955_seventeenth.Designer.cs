@@ -4,14 +4,16 @@ using GravityDAL;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace GravityDAL.Migrations
 {
     [DbContext(typeof(GravityGymDbContext))]
-    partial class GravityGymDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200420110955_seventeenth")]
+    partial class seventeenth
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -425,6 +427,29 @@ namespace GravityDAL.Migrations
                         });
                 });
 
+            modelBuilder.Entity("Domain.Entities.MuscleExercise", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<long>("ExerciseTemplateId")
+                        .HasColumnType("bigint");
+
+                    b.Property<long>("MuscleId")
+                        .HasColumnType("bigint");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ExerciseTemplateId");
+
+                    b.HasIndex("MuscleId", "ExerciseTemplateId")
+                        .IsUnique();
+
+                    b.ToTable("MuscleExercises");
+                });
+
             modelBuilder.Entity("Domain.Entities.OurTeamMember", b =>
                 {
                     b.Property<long>("Id")
@@ -729,6 +754,21 @@ namespace GravityDAL.Migrations
                     b.HasOne("Domain.Entities.Muscle", "SecondaryMuscle")
                         .WithMany()
                         .HasForeignKey("SecondaryMuscleId");
+                });
+
+            modelBuilder.Entity("Domain.Entities.MuscleExercise", b =>
+                {
+                    b.HasOne("Domain.Entities.ExerciseTemplate", "ExerciseTemplate")
+                        .WithMany()
+                        .HasForeignKey("ExerciseTemplateId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Domain.Entities.Muscle", "Muscle")
+                        .WithMany("MuscleExercises")
+                        .HasForeignKey("MuscleId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("Domain.Entities.PersonalInfo", b =>

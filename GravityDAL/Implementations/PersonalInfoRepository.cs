@@ -1,4 +1,5 @@
-﻿using Domain.Auth;
+﻿using AutoMapper;
+using Domain.Auth;
 using Domain.Entities;
 using GravityDAL.DTO;
 using GravityDAL.Helpers;
@@ -12,31 +13,20 @@ namespace GravityDAL.Implementations
 {
     public class PersonalInfoRepository : Repository<PersonalInfo>, IPersonalInfoRepository
     {
-        private readonly DbSet<UserRole> _userRoles;
         private readonly DbSet<Role> _roles;
         private readonly DbSet<ApplicationUser> _users;
-        private readonly DbSet<PersonalClient> _personalClients;
 
-        public PersonalInfoRepository(GravityGymDbContext gravityGymDbContext) : base(gravityGymDbContext)
+        public PersonalInfoRepository(GravityGymDbContext gravityGymDbContext, IMapper mapper) : base(gravityGymDbContext, mapper)
         {
-            _userRoles = gravityGymDbContext.UserRoles;
             _roles = gravityGymDbContext.Roles;
-            _users = gravityGymDbContext.Users;
-            _personalClients = gravityGymDbContext.PersonalClients;
-            
+            _users = gravityGymDbContext.Users;            
         }
 
         public async Task<PersonalInfo> GetPersonalInfoByUserId(long Id)
         {
-            var personalInfo = await _dbSet.Where(pi => pi.ApplicationUserId == Id).FirstOrDefaultAsync();
-
-            return personalInfo;
+            return await _dbSet.Where(pi => pi.ApplicationUserId == Id).FirstOrDefaultAsync();            
         }
-              
-        public IQueryable<UserRole> GetUserRoles()
-        {
-            return _userRoles;
-        }
+      
 
         public string GetUserRole(long roleId)
         {
@@ -50,10 +40,9 @@ namespace GravityDAL.Implementations
                                                   
             IQueryable<ApplicationUser> query = _users
                 .Include(u=>u.PersonalInfo)
-                .Include(u=>u.Clients)
+                .Include(u=>u.PersonalClients)
+                .Include(u=>u.Coach)
                 .Include(u=>u.Roles);
-
-            //var ziu = _users.Where(u => u.Id == 2L).Include(u => u.Roles).FirstOrDefault();
 
             if (!string.IsNullOrEmpty(filter))
             {
@@ -76,26 +65,9 @@ namespace GravityDAL.Implementations
                 firstName = au.PersonalInfo.FirstName,
                 lastName = au.PersonalInfo.LastName,
                 userEmail = au.Email,
-                userRoleId = au.Roles.FirstOrDefault().RoleId,
-                coachId = _personalClients
-                .Where(pc => pc.Email == au.Email).FirstOrDefault() != null ? _personalClients.Where(pc => pc.Email == au.Email).First().ApplicationUserId : 0
-            }
-            ).ToListAsync();
-
-            //var appUserDTOs = await pageOfAppUsers.Join(_userRoles,
-            //    u => u.Id,
-            //    r => r.UserId,
-            //    (u,r)=> new AppUserDTO
-            //    {
-            //        userName = u.UserName,
-            //        firstName = u.PersonalInfo.FirstName,
-            //        lastName = u.PersonalInfo.LastName,
-            //        userEmail = u.Email,
-            //        userRoleId = r.RoleId,                    
-            //        coachId = _personalClients
-            //        .Where(pc=>pc.Email==u.Email).FirstOrDefault()!=null ? _personalClients.Where(pc => pc.Email == u.Email).First().ApplicationUserId : 0
-            //    }
-            //    ).ToListAsync();
+                userRoleId = au.Roles.FirstOrDefault().RoleId,                
+                coachId = au.Coach.CoachId
+            }).ToListAsync();
 
             var numOfUsers = query.Count();
 

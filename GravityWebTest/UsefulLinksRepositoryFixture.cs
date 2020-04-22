@@ -1,8 +1,10 @@
+using AutoMapper;
 using Domain.Entities;
 using GravityDAL;
 using GravityDAL.Implementations;
 using GravityServices.Implementations;
 using Microsoft.EntityFrameworkCore;
+using Moq;
 using NUnit.Framework;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,6 +15,7 @@ namespace GravityWebTest
     public class UsefulLinksRepositoryFixture
     {
         private static IList<UsefulLink> _usefulLinks;
+        private static Mock<IMapper> _mapperMoq;
         static long[] IdNumbers =
         {
             1L, 2L, 3L, 4L
@@ -29,6 +32,7 @@ namespace GravityWebTest
                 new UsefulLink{ Id=4L, Description="some description 4", Link="https://amdaris.com/"}
             };
 
+            _mapperMoq = new Mock<IMapper>();
         }
 
         [Test]
@@ -47,7 +51,7 @@ namespace GravityWebTest
 
             using (var ctx = new GravityGymDbContext(options))
             {
-                var usefulLinkRepo = new UsefulLinksRepository(ctx);
+                var usefulLinkRepo = new UsefulLinksRepository(ctx, _mapperMoq.Object);
 
 
             //act
@@ -77,7 +81,7 @@ namespace GravityWebTest
 
             using (var ctx = new GravityGymDbContext(options))
             {
-                var usefulLinkRepo = new UsefulLinksRepository(ctx);
+                var usefulLinkRepo = new UsefulLinksRepository(ctx, _mapperMoq.Object);
 
 
                 var ul = new UsefulLink { Id = 5L, Description = "some description 5", Link = "https://amdaris.com/" };
@@ -109,7 +113,7 @@ namespace GravityWebTest
 
             using (var ctx = new GravityGymDbContext(options))
             {
-                var usefulLinkRepo = new UsefulLinksRepository(ctx);
+                var usefulLinkRepo = new UsefulLinksRepository(ctx, _mapperMoq.Object);
                                                
 
                 //act
@@ -141,7 +145,7 @@ namespace GravityWebTest
 
             using (var ctx = new GravityGymDbContext(options))
             {
-                var usefulLinkRepo = new UsefulLinksRepository(ctx);
+                var usefulLinkRepo = new UsefulLinksRepository(ctx, _mapperMoq.Object);
 
 
                 //act
@@ -176,7 +180,7 @@ namespace GravityWebTest
 
             using (var ctx = new GravityGymDbContext(options))
             {
-                var usefulLinkRepo = new UsefulLinksRepository(ctx);
+                var usefulLinkRepo = new UsefulLinksRepository(ctx, _mapperMoq.Object);
 
 
                 //act

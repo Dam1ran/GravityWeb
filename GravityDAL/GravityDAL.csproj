@@ -79,9 +79,88 @@
     <Compile Remove="Migrations\20200418021604_fifteenth.Designer.cs" />
     <Compile Remove="Migrations\20200418023939_fifteenth.cs" />
     <Compile Remove="Migrations\20200418023939_fifteenth.Designer.cs" />
+    <Compile Remove="Migrations\20200418052936_fifteenth.cs" />
+    <Compile Remove="Migrations\20200418052936_fifteenth.Designer.cs" />
+    <Compile Remove="Migrations\20200418062428_fifteenth.cs" />
+    <Compile Remove="Migrations\20200418062428_fifteenth.Designer.cs" />
+    <Compile Remove="Migrations\20200418063330_fifteenth.cs" />
+    <Compile Remove="Migrations\20200418063330_fifteenth.Designer.cs" />
+    <Compile Remove="Migrations\20200418064131_fifteenth.cs" />
+    <Compile Remove="Migrations\20200418064131_fifteenth.Designer.cs" />
+    <Compile Remove="Migrations\20200418065400_fifteenth.cs" />
+    <Compile Remove="Migrations\20200418065400_fifteenth.Designer.cs" />
+    <Compile Remove="Migrations\20200418070856_fifteenth.cs" />
+    <Compile Remove="Migrations\20200418070856_fifteenth.Designer.cs" />
+    <Compile Remove="Migrations\20200418070947_fifteenth.cs" />
+    <Compile Remove="Migrations\20200418070947_fifteenth.Designer.cs" />
+    <Compile Remove="Migrations\20200418071137_fifteenth.cs" />
+    <Compile Remove="Migrations\20200418071137_fifteenth.Designer.cs" />
+    <Compile Remove="Migrations\20200418071531_fifteenth.cs" />
+    <Compile Remove="Migrations\20200418071531_fifteenth.Designer.cs" />
+    <Compile Remove="Migrations\20200418075153_fifteenth.cs" />
+    <Compile Remove="Migrations\20200418075153_fifteenth.Designer.cs" />
+    <Compile Remove="Migrations\20200418075626_fifteenth.cs" />
+    <Compile Remove="Migrations\20200418075626_fifteenth.Designer.cs" />
+    <Compile Remove="Migrations\20200418083233_fifteenth.cs" />
+    <Compile Remove="Migrations\20200418083233_fifteenth.Designer.cs" />
+    <Compile Remove="Migrations\20200418091750_fifteenth.cs" />
+    <Compile Remove="Migrations\20200418091750_fifteenth.Designer.cs" />
+    <Compile Remove="Migrations\20200418094245_fifteenth.cs" />
+    <Compile Remove="Migrations\20200418094245_fifteenth.Designer.cs" />
+    <Compile Remove="Migrations\20200418094344_fifteenth.cs" />
+    <Compile Remove="Migrations\20200418094344_fifteenth.Designer.cs" />
+    <Compile Remove="Migrations\20200418095418_fifteenth.cs" />
+    <Compile Remove="Migrations\20200418095418_fifteenth.Designer.cs" />
+    <Compile Remove="Migrations\20200418102302_fifteenth.cs" />
+    <Compile Remove="Migrations\20200418102302_fifteenth.Designer.cs" />
+    <Compile Remove="Migrations\20200418112632_fifteenth.cs" />
+    <Compile Remove="Migrations\20200418112632_fifteenth.Designer.cs" />
+    <Compile Remove="Migrations\20200418133129_fifteenth.cs" />
+    <Compile Remove="Migrations\20200418133129_fifteenth.Designer.cs" />
+    <Compile Remove="Migrations\20200418134345_fifteenth.cs" />
+    <Compile Remove="Migrations\20200418134345_fifteenth.Designer.cs" />
+    <Compile Remove="Migrations\20200418134817_fifteenth.cs" />
+    <Compile Remove="Migrations\20200418134817_fifteenth.Designer.cs" />
+    <Compile Remove="Migrations\20200418135524_fifteenth.cs" />
+    <Compile Remove="Migrations\20200418135524_fifteenth.Designer.cs" />
+    <Compile Remove="Migrations\20200418140136_fifteenth.cs" />
+    <Compile Remove="Migrations\20200418140136_fifteenth.Designer.cs" />
+    <Compile Remove="Migrations\20200418140852_fifteenth.cs" />
+    <Compile Remove="Migrations\20200418140852_fifteenth.Designer.cs" />
+    <Compile Remove="Migrations\20200418142703_fifteenth.cs" />
+    <Compile Remove="Migrations\20200418142703_fifteenth.Designer.cs" />
+    <Compile Remove="Migrations\20200418163104_fifteenth.cs" />
+    <Compile Remove="Migrations\20200418163104_fifteenth.Designer.cs" />
+    <Compile Remove="Migrations\20200418163342_fifteenth.cs" />
+    <Compile Remove="Migrations\20200418163342_fifteenth.Designer.cs" />
+    <Compile Remove="Migrations\20200418173021_fifteenth.cs" />
+    <Compile Remove="Migrations\20200418173021_fifteenth.Designer.cs" />
+    <Compile Remove="Migrations\20200418180322_fifteenth.cs" />
+    <Compile Remove="Migrations\20200418180322_fifteenth.Designer.cs" />
+    <Compile Remove="Migrations\20200418180535_fifteenth.cs" />
+    <Compile Remove="Migrations\20200418180535_fifteenth.Designer.cs" />
+    <Compile Remove="Migrations\20200418180652_fifteenth.cs" />
+    <Compile Remove="Migrations\20200418180652_fifteenth.Designer.cs" />
+    <Compile Remove="Migrations\20200418180752_fifteenth.cs" />
+    <Compile Remove="Migrations\20200418180752_fifteenth.Designer.cs" />
+    <Compile Remove="Migrations\20200418180950_fifteenth.cs" />
+    <Compile Remove="Migrations\20200418180950_fifteenth.Designer.cs" />
+    <Compile Remove="Migrations\20200418181038_fifteenth.cs" />
+    <Compile Remove="Migrations\20200418181038_fifteenth.Designer.cs" />
+    <Compile Remove="Migrations\20200420104620_seventeenth.cs" />
+    <Compile Remove="Migrations\20200420104620_seventeenth.Designer.cs" />
+    <Compile Remove="Migrations\20200420105136_seventeenth.cs" />
+    <Compile Remove="Migrations\20200420105136_seventeenth.Designer.cs" />
+    <Compile Remove="Migrations\20200420105606_seventeenth.cs" />
+    <Compile Remove="Migrations\20200420105606_seventeenth.Designer.cs" />
+    <Compile Remove="Migrations\20200420190942_eighteenth.cs" />
+    <Compile Remove="Migrations\20200420190942_eighteenth.Designer.cs" />
+    <Compile Remove="Migrations\20200420191015_eighteenth.cs" />
+    <Compile Remove="Migrations\20200420191015_eighteenth.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="AutoMapper" Version="9.0.0" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="3.1.3" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="3.1.3" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Proxies" Version="3.1.3" />
@@ -91,6 +170,7 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
+    <PackageReference Include="System.Linq.Dynamic.Core" Version="1.0.24" />
   </ItemGroup>
 
   <ItemGroup>

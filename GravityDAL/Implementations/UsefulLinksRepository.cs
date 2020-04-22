@@ -1,14 +1,12 @@
-﻿using Domain.Entities;
+﻿using AutoMapper;
+using Domain.Entities;
 using GravityDAL.Interfaces;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace GravityDAL.Implementations
 {
     public class UsefulLinksRepository : Repository<UsefulLink>, IUsefulLinksRepository
     {
-        public UsefulLinksRepository(GravityGymDbContext gravityGymDbContext) : base(gravityGymDbContext)
+        public UsefulLinksRepository(GravityGymDbContext gravityGymDbContext, IMapper mapper) : base(gravityGymDbContext, mapper)
         {
             
         }

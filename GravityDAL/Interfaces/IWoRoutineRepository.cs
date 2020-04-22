@@ -8,6 +8,5 @@ namespace GravityDAL.Interfaces
 {
     public interface IWoRoutineRepository : IRepository<WoRoutine>
     {
-        Task<WoRoutine> GetByIdWithInclude(long id);
     }
 }

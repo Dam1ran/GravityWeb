@@ -17,7 +17,11 @@ namespace Domain.Entities
         public string Comments { get; set; }
         [MaxLength(10)]                
         public string Tempo { get; set; }
-        public virtual IList<MuscleExercise> MuscleExercises { get; set; }
+        //public virtual IList<MuscleExercise> MuscleExercises { get; set; }
+        public long? PrimaryMuscleId { get; set; }
+        public long? SecondaryMuscleId { get; set; }
+        public Muscle PrimaryMuscle { get; set; }
+        public Muscle SecondaryMuscle { get; set; }
         public virtual IList<Exercise> Exercises { get; set; }
     }
 }

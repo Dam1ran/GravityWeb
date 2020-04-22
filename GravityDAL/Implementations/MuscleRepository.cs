@@ -1,11 +1,12 @@
-﻿using Domain.Entities;
+﻿using AutoMapper;
+using Domain.Entities;
 using GravityDAL.Interfaces;
 
 namespace GravityDAL.Implementations
 {
     public class MuscleRepository : Repository<Muscle>, IMuscleRepository
     {
-        public MuscleRepository(GravityGymDbContext gravityGymDbContext) : base(gravityGymDbContext)
+        public MuscleRepository(GravityGymDbContext gravityGymDbContext, IMapper mapper) : base(gravityGymDbContext, mapper)
         {
 
         }

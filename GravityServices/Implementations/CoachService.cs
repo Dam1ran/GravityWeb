@@ -13,18 +13,14 @@ namespace GravityServices.Implementations
     public class CoachService : ICoachService
     {
         private readonly UserManager<ApplicationUser> _userManager;
-        private readonly IPersonalInfoRepository _personalInfoRepository;
-        private readonly IPersonalClientRepository _personalClientRepository;
+        private readonly IAppUserCoachRepository _appUserCoachRepository;
 
         public CoachService(
             UserManager<ApplicationUser> userManager,
-            IPersonalInfoRepository personalInfoRepository,
-            IPersonalClientRepository personalClientRepository
-            )
+            IAppUserCoachRepository appUserCoachRepository)
         {
             _userManager = userManager;
-            _personalInfoRepository = personalInfoRepository;
-            _personalClientRepository = personalClientRepository;
+            _appUserCoachRepository = appUserCoachRepository;
         }
 
         public async Task<ApplicationUser> AddPersonalClient(string coachEmail,string clientEmail)
@@ -40,7 +36,7 @@ namespace GravityServices.Implementations
 
             if (coach!=null && client!=null)
             {                   
-                coach.Clients = new List<PersonalClient>() { new PersonalClient { Email = clientEmail } };
+                coach.PersonalClients = new List<AppUserCoach>() { new AppUserCoach { CoachId = coach.Id, ApplicationUserId = client.Id }};
                 await _userManager.UpdateAsync(coach);
             }            
 
@@ -48,94 +44,65 @@ namespace GravityServices.Implementations
 
         }
 
-        public async Task<ApplicationUser> RemovePersonalClientsFromCoach(string coachEmail)
+        public async Task<bool> RemoveAllPersonalClientsFromCoach(string coachEmail)
         {
-            var user = await _userManager.FindByEmailAsync(coachEmail);
+            var coach = await _userManager.FindByEmailAsync(coachEmail);
 
-            if (user != null)
+            if (coach != null)
             {
-                var coachClients = await _personalClientRepository.GetPersonalClients(user.Id).ToListAsync();
-                                
-                await _personalClientRepository.RemovePersonalClients(coachClients);
-                
+                return await _appUserCoachRepository.RemoveAllPersonalClientsFromCoach(coach.Id);
             }
 
-            return user;
+            return false;
 
         }
 
         public async Task<IList<CoachDTO>> GetCoachesAsync()
         {
-            var users = _userManager.Users;            
-
-            var coachesDTOs = await users
-                .Join(_personalInfoRepository.GetUserRoles(),
-                p => p.Id,
-                c => c.UserId,
-                (p, c) =>
-                new
-                {
-                    p.Id,
-                    p.PersonalInfo.FirstName,
-                    p.PersonalInfo.LastName,
-                    p.Email,
-                    c.RoleId
-                })
-                .Where(r=>r.RoleId==2L)
-                .Select(o=> new CoachDTO 
-                {
-                    Id = o.Id,
-                    FirstName = o.FirstName,
-                    LastName = o.LastName,
-                    Email = o.Email
+            return await _userManager.Users
+                .Where(u=>u.Roles.FirstOrDefault().RoleId==2L)
+                .Select(x=> new CoachDTO
+                { 
+                    Id = x.Id,
+                    Email = x.Email,
+                    FirstName = x.PersonalInfo.FirstName,
+                    LastName = x.PersonalInfo.LastName
                 }).ToListAsync();
-
-            return coachesDTOs;
 
         }
 
-        public async Task<ApplicationUser> RemovePersonalClientsFromCoach(string coachEmail, string clientEmail)
+        public async Task<bool> RemovePersonalClientFromCoach(string coachEmail, string clientEmail)
         {
             if (string.IsNullOrEmpty(coachEmail) && string.IsNullOrEmpty(clientEmail))
             {
-                return null;
+                return false;
             }
 
-            var user = await _userManager.FindByEmailAsync(coachEmail);
+            var coach = await _userManager.FindByEmailAsync(coachEmail);
+            var client = await _userManager.FindByEmailAsync(clientEmail);
 
-            if (user != null)
-            {
-                var coachClient = _personalClientRepository
-                    .GetPersonalClients(user.Id)
-                    .Where(c=>c.Email == clientEmail)
-                    .FirstOrDefault();
-
-                await _personalClientRepository.RemovePersonalClient(coachClient);
-
+            if (coach != null && client != null)
+            {                
+                var result = await _appUserCoachRepository.RemovePersonalClientFromCoach( coach.Id, client.Id );
+                return result;
             }
 
-            return user;
+            return false;
         }
 
         public async Task<IList<ClientDTO>> GetPersonalClients(string coachEmail)
         {
             var coach = await _userManager.FindByEmailAsync(coachEmail);
-
-            var coachClients = _personalClientRepository.GetPersonalClients(coach.Id);
-
-            var coachClientsInfo = await coachClients
-                .Join(_userManager.Users,
-                        ccl => ccl.Email,
-                        u => u.Email,
-                        (c, u) => new ClientDTO 
-                        { 
-                            Id = u.Id,
-                            Email = u.Email,
-                            FirstName = u.PersonalInfo.FirstName??" -First Name- ",
-                            LastName = u.PersonalInfo.LastName??" -Last Name- "
-                        }).ToListAsync();
-
-            return coachClientsInfo;
+            
+            return await _appUserCoachRepository
+                .GetAllWithInclude(pc=>pc.ApplicationUser).Where(c=>c.CoachId==coach.Id)
+                .Select(x=> new ClientDTO
+                {   
+                    Id = x.ApplicationUser.Id,
+                    Email = x.ApplicationUser.Email,
+                    FirstName = x.ApplicationUser.PersonalInfo.FirstName,
+                    LastName = x.ApplicationUser.PersonalInfo.LastName
+                }).ToListAsync();
 
         }
     }

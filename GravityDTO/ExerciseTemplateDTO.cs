@@ -15,8 +15,10 @@ namespace GravityDTO
 
         [MaxLength(10)]        
         public string Tempo { get; set; }
-        public long PrimaryMuscleId { get; set; }
-        public long SecondaryMuscleId { get; set; }
+        public long? PrimaryMuscleId { get; set; }
+        public long? SecondaryMuscleId { get; set; }
+        public string PrimaryMuscle { get; set; }
+        public string SecondaryMuscle { get; set; }
 
     }
 }

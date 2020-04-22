@@ -36,13 +36,12 @@ namespace GravityDAL
         public DbSet<UsefulLink> UsefulLinks { get; set; }
         public DbSet<OurTeamMember> OurTeamMembers { get; set; }
         public DbSet<PersonalInfo>  PersonalInfos { get; set; }
-        public DbSet<PersonalClient> PersonalClients { get; set; }
+        public DbSet<AppUserCoach> AppUserCoaches { get; set; }
         public DbSet<ExerciseTemplate> ExerciseTemplates { get; set; }
         public DbSet<Muscle> Muscles { get; set; }
-        public DbSet<MuscleExercise> MuscleExercises { get; set; }
         public DbSet<WoRoutine> WoRoutines  { get; set; }
-        
-        
+
+
         private void ApplyIdentityMapConfiguration(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<ApplicationUser>().ToTable("Users", "Auth");
@@ -63,9 +62,19 @@ namespace GravityDAL
                 .WithOne()
                 .HasForeignKey(x => x.UserId);
 
-            modelBuilder.Entity<PersonalClient>().HasIndex(p => new { p.Email, p.ApplicationUserId }).IsUnique();
 
-            modelBuilder.Entity<PersonalClient>().HasIndex(p => new { p.Email});
+            modelBuilder.Entity<AppUserCoach>()
+                .HasIndex(e => new { e.CoachId, e.ApplicationUserId }).IsUnique();
+
+            modelBuilder.Entity<AppUserCoach>()
+                .HasOne(x => x.ApplicationUser)
+                .WithOne(x => x.Coach)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<AppUserCoach>()
+                .HasOne(x => x.Coach)
+                .WithMany(x => x.PersonalClients)
+                .HasForeignKey(x => x.CoachId);
 
             modelBuilder.Entity<Muscle>().HasData
                 (
@@ -86,18 +95,7 @@ namespace GravityDAL
                     new Muscle { Id=15L, Name="Forearms"}
 
                 );
-
-            modelBuilder.Entity<MuscleExercise>()
-                .HasOne(x=>x.ExerciseTemplate)
-                .WithMany(x=>x.MuscleExercises)
-                .OnDelete(DeleteBehavior.Cascade);
-
-            modelBuilder.Entity<MuscleExercise>()
-                .HasOne(x => x.Muscle)
-                .WithMany(x => x.MuscleExercises)
-                .OnDelete(DeleteBehavior.Cascade);
-
-            modelBuilder.Entity<MuscleExercise>().HasIndex(p => new { p.MuscleId, p.ExerciseTemplateId }).IsUnique();
+            
 
             modelBuilder.Entity<ExerciseTemplate>().HasIndex(x => x.Name).IsUnique();
 
