@@ -40,7 +40,7 @@ namespace GravityDAL
         public DbSet<ExerciseTemplate> ExerciseTemplates { get; set; }
         public DbSet<Muscle> Muscles { get; set; }
         public DbSet<WoRoutine> WoRoutines  { get; set; }
-
+        
 
         private void ApplyIdentityMapConfiguration(ModelBuilder modelBuilder)
         {

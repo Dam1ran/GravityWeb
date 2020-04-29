@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Text;
 
 namespace GravityDTO.WORoutine
 {
@@ -17,6 +16,7 @@ namespace GravityDTO.WORoutine
         public string WorkoutComments { get; set; }
         public DateTime? WorkoutDate { get; set; }
         public long WoRoutineId { get; set; }
+        public IList<ExerciseDTO> Exercises { get; set; }
 
     }
 }

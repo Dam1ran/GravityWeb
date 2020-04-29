@@ -2,19 +2,18 @@
 using GravityDAL.Interfaces;
 using GravityDTO;
 using GravityServices.Interfaces;
-using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
+using GravityServices.Helpers;
 
 namespace GravityServices.Implementations
 {
-    public class DayScheduleService : IDayScheduleService
+    public class GymSessionScheduleService : IGymSessionScheduleService
     {
         private readonly IFileSaver _fileSaver;
         private readonly IGymSessionScheduleRepository _gymSessionScheduleRepository;
 
-        public DayScheduleService(
+        public GymSessionScheduleService(
             IGymSessionScheduleRepository gymSessionScheduleRepository,
             IFileSaver fileSaver
             )
@@ -23,10 +22,21 @@ namespace GravityServices.Implementations
             _fileSaver = fileSaver;
         }
 
-
-        public async Task<GymSessionSchedule> SaveAsync(string WRpath,ScheduleUploadData scheduleUploadData)
+        public async Task<IList<GymSessionSchedule>> GetByDayOfWeek(string dayOfWeek, string baseUrl, string uploadFolderName)
         {
-            var response = await _fileSaver.Save(WRpath, scheduleUploadData.file);
+            var result = await _gymSessionScheduleRepository.GetByDayOfWeek(dayOfWeek);
+
+            foreach (var item in result)
+            {
+                item.ImageUrl = item.ImageUrl.MakeUrl(baseUrl, uploadFolderName);
+            }
+
+            return result;
+        }
+
+        public async Task<GymSessionSchedule> SaveAsync(string WRpath, string uploadFolderName, ScheduleUploadData scheduleUploadData)
+        {
+            var response = await _fileSaver.Save(WRpath, uploadFolderName, scheduleUploadData.file);
 
             if (response != "Failed")
             {

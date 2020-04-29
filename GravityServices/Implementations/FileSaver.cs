@@ -1,25 +1,21 @@
-﻿using GravityDTO;
-using GravityServices.Interfaces;
+﻿using GravityServices.Interfaces;
 using Microsoft.AspNetCore.Http;
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace GravityServices.Implementations
 {
     public class FileSaver : IFileSaver
     {
-        private readonly string uploadFolderName = @"\Upload\";
+        private string _uploadFolderName = "";        
         private string savingPath = "";
         public string EnvironmentString { get; private set; }
 
-
-
-        public async Task<string> Save(string envString, IFormFile file)
+        public async Task<string> Save(string envString, string uploadFolderName, IFormFile file)
         {
             EnvironmentString = envString;
+            _uploadFolderName = $"/{ uploadFolderName }/";
 
             try
             {
@@ -30,7 +26,7 @@ namespace GravityServices.Implementations
                     {
                         await file.CopyToAsync(fileStream);
                         fileStream.Flush();
-                        return (@"https://localhost:44390" + uploadFolderName + modString).Replace(@"\", "/");
+                        return modString;                        
                     }
                 }
                 else
@@ -53,9 +49,9 @@ namespace GravityServices.Implementations
 
             try
             {
-                if (!Directory.Exists(EnvironmentString + uploadFolderName))
+                if (!Directory.Exists(EnvironmentString + _uploadFolderName))
                 {
-                    Directory.CreateDirectory(EnvironmentString + uploadFolderName);
+                    Directory.CreateDirectory(EnvironmentString + _uploadFolderName);
                 }
             }
             catch (IOException IOex)
@@ -65,7 +61,7 @@ namespace GravityServices.Implementations
                 return false;
             }
 
-            savingPath = EnvironmentString + uploadFolderName;
+            savingPath = EnvironmentString + _uploadFolderName;
 
             return true;
 

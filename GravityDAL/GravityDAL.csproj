@@ -157,6 +157,26 @@
     <Compile Remove="Migrations\20200420190942_eighteenth.Designer.cs" />
     <Compile Remove="Migrations\20200420191015_eighteenth.cs" />
     <Compile Remove="Migrations\20200420191015_eighteenth.Designer.cs" />
+    <Compile Remove="Migrations\20200422213532_20.cs" />
+    <Compile Remove="Migrations\20200422213532_20.Designer.cs" />
+    <Compile Remove="Migrations\20200422213650_20.cs" />
+    <Compile Remove="Migrations\20200422213650_20.Designer.cs" />
+    <Compile Remove="Migrations\20200422214323_20.cs" />
+    <Compile Remove="Migrations\20200422214323_20.Designer.cs" />
+    <Compile Remove="Migrations\20200423134457_20.cs" />
+    <Compile Remove="Migrations\20200423134457_20.Designer.cs" />
+    <Compile Remove="Migrations\20200423134644_20.cs" />
+    <Compile Remove="Migrations\20200423134644_20.Designer.cs" />
+    <Compile Remove="Migrations\20200423140412_20.cs" />
+    <Compile Remove="Migrations\20200423140412_20.Designer.cs" />
+    <Compile Remove="Migrations\20200423145508_20.cs" />
+    <Compile Remove="Migrations\20200423145508_20.Designer.cs" />
+    <Compile Remove="Migrations\20200424103320_nighteenth.cs" />
+    <Compile Remove="Migrations\20200424103320_nighteenth.Designer.cs" />
+    <Compile Remove="Migrations\20200424103526_nighteenth.cs" />
+    <Compile Remove="Migrations\20200424103526_nighteenth.Designer.cs" />
+    <Compile Remove="Migrations\20200424103712_nighteenth.cs" />
+    <Compile Remove="Migrations\20200424103712_nighteenth.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>

@@ -1,11 +1,9 @@
 ﻿using GravityDTO;
 using GravityServices.Interfaces;
-using Microsoft.Extensions.Options;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Net.Http;
-using System.Text;
 using System.Threading.Tasks;
 
 
@@ -13,8 +11,7 @@ using System.Threading.Tasks;
 namespace GravityServices.Implementations
 {
     public class GetFBImageUrlsService : IGetFBImageUrlsService
-    {
-        
+    {        
         public async Task<GalleryImagesDTO> GetImagesUrl(string nav, string token)
         {
                         

@@ -15,6 +15,7 @@ namespace GravityServices.Implementations
     {
         private IWoRoutineRepository _woRoutineRepository;
         private readonly IWorkoutRepository _workoutRepository;
+        private readonly IExerciseRepository _exerciseRepository;
         private IMapper _mapper;
         private ILogger<WoRoutineService> _logger;
 
@@ -22,11 +23,13 @@ namespace GravityServices.Implementations
         public WoRoutineService(
             IWoRoutineRepository woRoutineRepository,
             IWorkoutRepository workoutRepository,
+            IExerciseRepository exerciseRepository,
             IMapper mapper,
             ILogger<WoRoutineService> logger)
         {
             _woRoutineRepository = woRoutineRepository;
             _workoutRepository = workoutRepository;
+            _exerciseRepository = exerciseRepository;
             _mapper = mapper;
             _logger = logger;
         }
@@ -150,5 +153,73 @@ namespace GravityServices.Implementations
 
             return null;
         }
+
+        public async Task<IList<ExerciseDTO>> AddExerciseToWorkout(ExerciseDTO exerciseDTO)
+        {
+            var existentExercises = await _exerciseRepository.GetByWorkoutId(exerciseDTO.WorkoutId);
+            var order = -1;
+            if (existentExercises.Count > 0)
+            {
+                order = existentExercises.Select(x=>x.Order).LastOrDefault();
+            }
+
+            var exerciseToAdd = new Exercise { Order = ++order, ExerciseTemplateId = exerciseDTO.ExerciseTemplateId, WorkoutId = exerciseDTO.WorkoutId };
+
+            try
+            {
+                await _exerciseRepository.AddAsync(exerciseToAdd);
+                return await GetExercisesFromWorkout(exerciseDTO.WorkoutId);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                return null;
+            }
+
+        }
+
+        public async Task<IList<ExerciseDTO>> GetExercisesFromWorkout(long id)
+        {
+            var exercises = await _exerciseRepository.GetByWorkoutId(id);
+            return _mapper.Map<List<ExerciseDTO>>(exercises);
+        }
+
+        public async Task<bool> DeleteExercise(long Id)
+        {
+            var deleted = await _exerciseRepository.DeleteAsync(Id);
+
+            return deleted != null;
+        }
+        
+        public async Task<IList<ExerciseDTO>> Swap(ExerciseDTO exerciseDTO, bool upDown)
+        {
+            var exercise = await _exerciseRepository.GetByIdAsync(exerciseDTO.Id);
+            if (exercise != null)
+            {
+                var exerciseToSwapOrder = upDown ?
+                    await _exerciseRepository.GetLastWithOrderInferiorTo(exercise.WorkoutId, exercise.Order):
+                    await _exerciseRepository.GetFirstWithOrderSuperiorTo(exercise.WorkoutId, exercise.Order);
+                if (exerciseToSwapOrder != null)
+                {
+                    int order = exercise.Order;
+                    exercise.Order = exerciseToSwapOrder.Order;
+                    exerciseToSwapOrder.Order = order;
+                    try
+                    {
+                        await _exerciseRepository.SaveChangesAsync();
+                        return await GetExercisesFromWorkout(exercise.WorkoutId);
+                    }
+                    catch (Exception ex)
+                    {
+                        _logger.LogError(ex.Message);
+                        return null;
+                    }
+                }
+            }
+
+            return null;
+        }
     }
+    
+    
 }

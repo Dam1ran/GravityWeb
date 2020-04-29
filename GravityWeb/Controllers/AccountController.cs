@@ -1,20 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using Domain.Entities;
+using GravityDTO;
+using GravityWeb.Helpers;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
+using Microsoft.IdentityModel.Tokens;
+using System;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
-using Domain.Auth;
-using Domain.Entities;
-using GravityDTO;
-using GravityWeb.Helpers;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Options;
-using Microsoft.IdentityModel.Tokens;
 
 namespace GravityWeb.Controllers
 {

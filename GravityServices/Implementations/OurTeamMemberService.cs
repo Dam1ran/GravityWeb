@@ -1,10 +1,9 @@
 ﻿using Domain.Entities;
 using GravityDAL.Interfaces;
 using GravityDTO;
+using GravityServices.Helpers;
 using GravityServices.Interfaces;
-using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace GravityServices.Implementations
@@ -20,10 +19,23 @@ namespace GravityServices.Implementations
             _ourTeamMemberRepository = ourTeamMemberRepository;
         }
 
-        public async Task<OurTeamMember> SaveAsync(string WRpath, OurTeamMemberData ourTeamMemberData)
+        public async Task<IList<OurTeamMember>> GetAllAsync(string baseUrl, string uploadFolderName)
         {
-            var responseAvatarFile = await _fileSaver.Save(WRpath, ourTeamMemberData.avatarFile);
-            var responseImageFile = await _fileSaver.Save(WRpath, ourTeamMemberData.imageFile);
+            var result = await _ourTeamMemberRepository.GetAllAsync();
+
+            foreach (var item in result)
+            {
+                item.AvatarUrl = item.AvatarUrl.MakeUrl(baseUrl, uploadFolderName);
+                item.ImageUrl = item.ImageUrl.MakeUrl(baseUrl, uploadFolderName);
+            }
+
+            return result;
+        }
+
+        public async Task<OurTeamMember> SaveAsync(string WRpath, string uploadFolderName, OurTeamMemberData ourTeamMemberData)
+        {
+            var responseAvatarFile = await _fileSaver.Save(WRpath, uploadFolderName, ourTeamMemberData.avatarFile);
+            var responseImageFile = await _fileSaver.Save(WRpath, uploadFolderName, ourTeamMemberData.imageFile);
 
             if (responseAvatarFile != "Failed" || responseImageFile != "Failed")
             {

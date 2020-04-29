@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
-namespace GravityWeb.Helpers
+﻿namespace GravityWeb.Helpers
 {
     public class AppSettings
     {
@@ -12,5 +7,8 @@ namespace GravityWeb.Helpers
         public int ExpireTimeDays { get; set; }
         public string Secret { get; set; }
         public string FBAccessToken { get; set; }
+        public string BaseUrl { get; set; }
+        public string UploadScheduleFolderName { get; set; }
+        public string UploadTeamMemberFolderName { get; set; }
     }
 }

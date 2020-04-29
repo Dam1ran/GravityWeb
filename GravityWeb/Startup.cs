@@ -67,9 +67,9 @@ namespace GravityWeb
 
 
             //repos and services
-            services.AddScoped<IGymSessionScheduleRepository, GymSessionScheduleRepository>();
             services.AddScoped<IUsefulLinksRepository, UsefulLinksRepository>();
-            services.AddScoped<IDayScheduleService, DayScheduleService>();
+            services.AddScoped<IGymSessionScheduleRepository, GymSessionScheduleRepository>();
+            services.AddScoped<IGymSessionScheduleService, GymSessionScheduleService>();
             services.AddScoped<IOurTeamMemberRepository, OurTeamMemberRepository>();
             services.AddScoped<IOurTeamMemberService, OurTeamMemberService>();
             services.AddScoped<IPersonalInfoRepository, PersonalInfoRepository>();
@@ -77,10 +77,12 @@ namespace GravityWeb
             services.AddScoped<IExerciseTemplateRepository, ExerciseTemplateRepository>();
             services.AddScoped<IMuscleRepository, MuscleRepository>();
             services.AddScoped<IAppUserCoachRepository, AppUserCoachRepository>();
+            services.AddScoped<IApplicationUserService, ApplicationUserService>();
             services.AddScoped<IExerciseTemplateService, ExerciseTemplateService>();
             services.AddScoped<IWoRoutineRepository, WoRoutineRepository>();
             services.AddScoped<IWoRoutineService, WoRoutineService>();
             services.AddScoped<IWorkoutRepository, WorkoutRepository>();
+            services.AddScoped<IExerciseRepository, ExerciseRepository>();
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<ICoachService, CoachService>();
 

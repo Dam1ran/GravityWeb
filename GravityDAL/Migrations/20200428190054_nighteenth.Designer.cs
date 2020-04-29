@@ -4,14 +4,16 @@ using GravityDAL;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace GravityDAL.Migrations
 {
     [DbContext(typeof(GravityGymDbContext))]
-    partial class GravityGymDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200428190054_nighteenth")]
+    partial class nighteenth
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

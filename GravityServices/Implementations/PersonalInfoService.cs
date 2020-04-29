@@ -3,9 +3,6 @@ using Domain.Entities;
 using GravityDAL.Interfaces;
 using GravityDTO;
 using GravityServices.Interfaces;
-using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace GravityServices.Implementations

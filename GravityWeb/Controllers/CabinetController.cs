@@ -1,19 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IdentityModel.Tokens.Jwt;
-using System.Linq;
-using System.Security.Claims;
-using System.Threading.Tasks;
-using Domain.Entities;
+﻿using Domain.Entities;
 using GravityDAL.Interfaces;
 using GravityDAL.PageModels;
 using GravityDTO;
 using GravityDTO.WORoutine;
 using GravityServices.Interfaces;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
+using System.Threading.Tasks;
 
 namespace GravityWeb.Controllers
 {
@@ -32,6 +27,7 @@ namespace GravityWeb.Controllers
         private readonly IExerciseTemplateService _exerciseTemplateService;
         private readonly IMuscleRepository _muscleRepository;
         private readonly IWoRoutineService _woRoutineService;
+        private readonly IApplicationUserService _applicationUserService;
 
         public CabinetController(
             UserManager<ApplicationUser> userManager,
@@ -41,7 +37,8 @@ namespace GravityWeb.Controllers
             IPersonalInfoRepository personalInfoRepository,
             IMuscleRepository muscleRepository,
             IExerciseTemplateService exerciseTemplateService,
-            IWoRoutineService woRoutineService)
+            IWoRoutineService woRoutineService,
+            IApplicationUserService applicationUserService)
         {
             _userManager = userManager;
             _personalInfoService = personalInfoService;
@@ -51,6 +48,7 @@ namespace GravityWeb.Controllers
             _exerciseTemplateService = exerciseTemplateService;
             _muscleRepository = muscleRepository;
             _woRoutineService = woRoutineService;
+            _applicationUserService = applicationUserService;
         }
 
         [HttpGet("getpersonalinfo")]
@@ -85,38 +83,30 @@ namespace GravityWeb.Controllers
             {
                 var response = await _personalInfoService.SavePersonalInfo(personalInfoDTO,user.Id);             
             
-                return Ok(response);
-               
+                return Ok(response);               
             }
 
             return BadRequest();
         
         }
-
+        
         [HttpPost("getusers")]
         [Authorize(Policy = "RequireAdminRole")]
-        public async Task<IActionResult> GetUsers([FromBody]GetUserRequestDTO getUserRequestDTO)
-        {           
-            var userDTOsResponse = await _personalInfoRepository
-            .GetUsers(
-                    getUserRequestDTO.filter,
-                    getUserRequestDTO.page,
-                    getUserRequestDTO.pageSize
-                );
+        public async Task<IActionResult> GetUsers([FromBody]PaginatedRequest paginatedRequest)
+        {
+            var response = await _applicationUserService.GetUsers(paginatedRequest);            
 
-            return Ok(userDTOsResponse);
-            
+            return Ok(response);
+
         }
 
         [HttpGet("getcoaches")]
         [Authorize(Policy = "RequireAdminRole")]
         public async Task<IActionResult> GetCoaches()
-        {
-            
+        {            
             var coachDTOs = await _coachService.GetCoachesAsync();
             
             return Ok(coachDTOs);
-
         }
 
         [HttpPost("saveuserrole")]
@@ -317,5 +307,65 @@ namespace GravityWeb.Controllers
 
         }
 
+        [HttpPost("addexercisetoworkout")]
+        [Authorize(Policy = "RequireCoachRole")]
+        public async Task<IActionResult> AddExerciseToWorkout([FromBody]ExerciseDTO exerciseDTO)
+        {
+            var result = await _woRoutineService.AddExerciseToWorkout(exerciseDTO);
+
+            if (result != null)
+            {
+                return Ok(result);
+            }
+
+            return BadRequest("Could Not Add Exercise");
+        }
+
+        [HttpGet("getexercisesfromworkout/{Id}")]
+        [Authorize(Policy = "RequireCoachRole")]
+        public async Task<IActionResult> GetExercisesFromWorkout(long Id)
+        {
+            var result = await _woRoutineService.GetExercisesFromWorkout(Id);
+
+            return Ok(result);
+        }
+
+        [HttpDelete("deleteexercise/{Id}")]
+        [Authorize(Policy = "RequireCoachRole")]
+        public async Task<IActionResult> DeleteExercise(long Id)
+        {
+            var result = await _woRoutineService.DeleteExercise(Id);
+
+            return Ok(new { Deleted = result });
+
+        }
+
+        [HttpPost("swapup")]
+        [Authorize(Policy = "RequireCoachRole")]
+        public async Task<IActionResult> SwapUp([FromBody]ExerciseDTO exerciseDTO)
+        {
+            var result = await _woRoutineService.Swap(exerciseDTO, true);
+
+            if (result != null)
+            {
+                return Ok(result);
+            }
+
+            return BadRequest("Could Not Swap Exercise");
+        }
+
+        [HttpPost("swapdown")]
+        [Authorize(Policy = "RequireCoachRole")]
+        public async Task<IActionResult> SwapDown([FromBody]ExerciseDTO exerciseDTO)
+        {
+            var result = await _woRoutineService.Swap(exerciseDTO, false);
+
+            if (result != null)
+            {
+                return Ok(result);
+            }
+
+            return BadRequest("Could Not Swap Exercise");
+        }
     }
 }

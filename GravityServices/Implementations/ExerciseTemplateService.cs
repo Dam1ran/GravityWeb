@@ -6,7 +6,6 @@ using GravityDTO;
 using GravityServices.Interfaces;
 using Microsoft.Extensions.Logging;
 using System;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace GravityServices.Implementations

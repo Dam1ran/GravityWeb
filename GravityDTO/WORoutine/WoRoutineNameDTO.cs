@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace GravityDTO.WORoutine
+﻿namespace GravityDTO.WORoutine
 {
     public class WoRoutineNameDTO
     {

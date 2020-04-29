@@ -1,19 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text.Json;
-using System.Threading.Tasks;
-using Domain.Entities;
+﻿using Domain.Entities;
 using GravityDAL.Interfaces;
 using GravityDTO;
 using GravityServices.Interfaces;
 using GravityWeb.Helpers;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using System;
+using System.Threading.Tasks;
 
 namespace GravityWeb.Controllers
 {
@@ -23,7 +19,7 @@ namespace GravityWeb.Controllers
     {
         #region INITIALIZATIONS
         private readonly IWebHostEnvironment _environment;
-        private readonly IDayScheduleService _dayScheduleService;
+        private readonly IGymSessionScheduleService _gymSessionScheduleService;
         private readonly IGymSessionScheduleRepository _gymSessionScheduleRepository;
         private readonly IUsefulLinksRepository _usefulLinksRepository;
         private readonly IOurTeamMemberService _ourTeamMemberService;
@@ -35,7 +31,7 @@ namespace GravityWeb.Controllers
 
         public InformationController(
             IWebHostEnvironment environment,
-            IDayScheduleService dayScheduleService,
+            IGymSessionScheduleService gymSessionScheduleService,
             IGymSessionScheduleRepository gymSessionScheduleRepository,
             IUsefulLinksRepository usefulLinksRepository,
             IOurTeamMemberService ourTeamMemberService,
@@ -46,7 +42,7 @@ namespace GravityWeb.Controllers
             )
         {
             _environment = environment;
-            _dayScheduleService = dayScheduleService;
+            _gymSessionScheduleService = gymSessionScheduleService;
             _gymSessionScheduleRepository = gymSessionScheduleRepository;
             _usefulLinksRepository = usefulLinksRepository;
             _ourTeamMemberService = ourTeamMemberService;
@@ -64,7 +60,7 @@ namespace GravityWeb.Controllers
 
             if (scheduleUploadData.file.Length > 0)
             {
-                var response = await _dayScheduleService.SaveAsync(_environment.WebRootPath, scheduleUploadData);
+                var response = await _gymSessionScheduleService.SaveAsync(_environment.WebRootPath,_appsettings.UploadScheduleFolderName, scheduleUploadData);
 
                 if (response!=null)
                 {
@@ -94,8 +90,8 @@ namespace GravityWeb.Controllers
 
         [HttpGet("scheduleforday/{dayOfWeek}")]
         public async Task<IActionResult> Get(string dayOfWeek)
-        {            
-            return Ok(await _gymSessionScheduleRepository.GetByDayOfWeek(dayOfWeek)); 
+        {                     
+            return Ok(await _gymSessionScheduleService.GetByDayOfWeek(dayOfWeek, _appsettings.BaseUrl, _appsettings.UploadScheduleFolderName)); 
         }
 
         
@@ -142,7 +138,7 @@ namespace GravityWeb.Controllers
         [Authorize(Policy = "RequireAdminRole")]
         public async Task<IActionResult> PostTeamMember([FromForm]OurTeamMemberData ourTeamMemberData)
         {
-            var teamMember = await _ourTeamMemberService.SaveAsync(_environment.WebRootPath, ourTeamMemberData);
+            var teamMember = await _ourTeamMemberService.SaveAsync(_environment.WebRootPath, _appsettings.UploadTeamMemberFolderName, ourTeamMemberData);
 
             if (teamMember != null)
             {
@@ -156,7 +152,7 @@ namespace GravityWeb.Controllers
         [HttpGet("getteammembers")]
         public async Task<IActionResult> GetTeamMembers()
         {
-            var members = await _ourTeamMemberRepository.GetAllAsync();
+            var members = await _ourTeamMemberService.GetAllAsync(_appsettings.BaseUrl, _appsettings.UploadTeamMemberFolderName);
 
             return Ok(members);
         }

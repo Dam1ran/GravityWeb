@@ -1,6 +1,9 @@
 ﻿using AutoMapper;
 using Domain.Entities.WorkoutEntities;
 using GravityDAL.Interfaces;
+using Microsoft.EntityFrameworkCore;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace GravityDAL.Implementations
 {
@@ -10,5 +13,6 @@ namespace GravityDAL.Implementations
         {
 
         }
+
     }
 }

@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace GravityDTO
+﻿namespace GravityDTO
 {
     public class UserRegisterCredentials
     {
