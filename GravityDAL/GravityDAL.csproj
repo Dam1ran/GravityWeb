@@ -177,6 +177,12 @@
     <Compile Remove="Migrations\20200424103526_nighteenth.Designer.cs" />
     <Compile Remove="Migrations\20200424103712_nighteenth.cs" />
     <Compile Remove="Migrations\20200424103712_nighteenth.Designer.cs" />
+    <Compile Remove="Migrations\20200504085530_twentieth.cs" />
+    <Compile Remove="Migrations\20200504085530_twentieth.Designer.cs" />
+    <Compile Remove="Migrations\20200504085611_twentieth.cs" />
+    <Compile Remove="Migrations\20200504085611_twentieth.Designer.cs" />
+    <Compile Remove="Migrations\20200504102740_twentieth.cs" />
+    <Compile Remove="Migrations\20200504102740_twentieth.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>

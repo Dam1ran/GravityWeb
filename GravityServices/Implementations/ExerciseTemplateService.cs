@@ -33,6 +33,13 @@ namespace GravityServices.Implementations
             return deleted != null;
         }
 
+        public async Task<ExerciseTemplateDTO> GetExerciseTemplate(long Id)
+        {
+            var exerciseTemplate = await _exerciseTemplateRepository.GetByIdWithInclude(Id, x=>x.PrimaryMuscle, x=>x.SecondaryMuscle);
+
+            return _mapper.Map<ExerciseTemplateDTO>(exerciseTemplate);            
+        }
+
         public async Task<PaginatedResult<ExerciseTemplateDTO>> GetExerciseTemplates(PaginatedRequest paginatedRequest)
         {
             var result = await _exerciseTemplateRepository.GetPagedData<ExerciseTemplateDTO>(paginatedRequest);

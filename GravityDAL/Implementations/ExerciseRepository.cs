@@ -17,11 +17,19 @@ namespace GravityDAL.Implementations
 
         public async Task<IList<Exercise>> GetByWorkoutId(long Id)
         {
-            return await _dbSet
+            var exercises = await _dbSet
                 .Include(x => x.ExerciseTemplate) 
+                .Include(x => x.ExerciseSets)
                 .Where(x => x.WorkoutId == Id)
                 .OrderBy(x => x.Order)
                 .ToListAsync();
+
+            foreach (var exercise in exercises)
+            {
+                exercise.ExerciseSets = exercise.ExerciseSets.OrderBy(x => x.Order).ToList();
+            }
+
+            return exercises;
         }
 
         public async Task<Exercise> GetFirstWithOrderSuperiorTo(long workoutId, int order)

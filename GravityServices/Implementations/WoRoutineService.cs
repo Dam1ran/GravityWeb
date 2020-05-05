@@ -16,6 +16,7 @@ namespace GravityServices.Implementations
         private IWoRoutineRepository _woRoutineRepository;
         private readonly IWorkoutRepository _workoutRepository;
         private readonly IExerciseRepository _exerciseRepository;
+        private readonly IExerciseSetRepository _exerciseSetRepository;
         private IMapper _mapper;
         private ILogger<WoRoutineService> _logger;
 
@@ -24,12 +25,14 @@ namespace GravityServices.Implementations
             IWoRoutineRepository woRoutineRepository,
             IWorkoutRepository workoutRepository,
             IExerciseRepository exerciseRepository,
+            IExerciseSetRepository exerciseSetRepository,
             IMapper mapper,
             ILogger<WoRoutineService> logger)
         {
             _woRoutineRepository = woRoutineRepository;
             _workoutRepository = workoutRepository;
             _exerciseRepository = exerciseRepository;
+            _exerciseSetRepository = exerciseSetRepository;
             _mapper = mapper;
             _logger = logger;
         }
@@ -181,6 +184,7 @@ namespace GravityServices.Implementations
         public async Task<IList<ExerciseDTO>> GetExercisesFromWorkout(long id)
         {
             var exercises = await _exerciseRepository.GetByWorkoutId(id);
+
             return _mapper.Map<List<ExerciseDTO>>(exercises);
         }
 
@@ -218,6 +222,43 @@ namespace GravityServices.Implementations
             }
 
             return null;
+        }
+
+        public async Task<ExerciseSetDTO> AddSet(ExerciseSetDTO exerciseSetDTO)
+        {
+            var exercise = await _exerciseRepository.GetByIdAsync(exerciseSetDTO.ExerciseId);
+            if (exercise == null)
+            {
+                return null;
+            }
+
+            var order = await _exerciseSetRepository.GetNextSetOrderOfExercise(exerciseSetDTO.ExerciseId);
+
+            var exerciseSet = new ExerciseSet 
+            {
+                ExerciseId = exerciseSetDTO.ExerciseId,
+                Order = order,
+                RestSecondsBetweenSet = exerciseSetDTO.RestSecondsBetweenSet,
+                NumberOfReps = exerciseSetDTO.NumberOfReps,
+                Weight = exerciseSetDTO.Weight                
+            };
+            try
+            {
+                var exerciseSetResponse = await _exerciseSetRepository.AddAsync(exerciseSet);
+                return _mapper.Map<ExerciseSetDTO>(exerciseSetResponse);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                return null;
+            }
+        }
+
+        public async Task<bool> DeleteSet(long Id)
+        {
+            var deleted = await _exerciseSetRepository.DeleteAsync(Id);
+
+            return deleted != null;
         }
     }
     

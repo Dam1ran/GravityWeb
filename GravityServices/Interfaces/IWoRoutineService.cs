@@ -19,6 +19,9 @@ namespace GravityServices.Interfaces
         Task<IList<ExerciseDTO>> GetExercisesFromWorkout(long id);
         Task<bool> DeleteExercise(long Id);
         Task<IList<ExerciseDTO>> Swap(ExerciseDTO exerciseDTO, bool upDown);
+        Task<ExerciseSetDTO> AddSet(ExerciseSetDTO exerciseSetDTO);
+        Task<bool> DeleteSet(long Id);
+
 
     }
 }

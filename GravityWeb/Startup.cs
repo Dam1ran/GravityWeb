@@ -83,6 +83,7 @@ namespace GravityWeb
             services.AddScoped<IWoRoutineService, WoRoutineService>();
             services.AddScoped<IWorkoutRepository, WorkoutRepository>();
             services.AddScoped<IExerciseRepository, ExerciseRepository>();
+            services.AddScoped<IExerciseSetRepository, ExerciseSetRepository>();
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<ICoachService, CoachService>();
 

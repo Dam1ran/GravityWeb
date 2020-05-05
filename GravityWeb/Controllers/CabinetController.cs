@@ -161,11 +161,8 @@ namespace GravityWeb.Controllers
         [Authorize(Policy = "RequireCoachRole")]
         public async Task<IActionResult> GetMyClients()
         {
-
             var clients = await _coachService.GetPersonalClients(UserEmail);
-
             return Ok(clients);            
-
         }
 
         [HttpPost("saveexercisetemplate")]
@@ -366,6 +363,37 @@ namespace GravityWeb.Controllers
             }
 
             return BadRequest("Could Not Swap Exercise");
+        }
+
+        [HttpGet("getexercisetemplate/{Id}")]
+        [Authorize(Policy = "RequireCoachRole")]
+        public async Task<IActionResult> GetExerciseTemplate(long Id)
+        {
+            var result = await _exerciseTemplateService.GetExerciseTemplate(Id);
+
+            return Ok(result);
+        }
+
+        [HttpPost("addSet")]
+        [Authorize(Policy = "RequireCoachRole")]
+        public async Task<IActionResult> AddSet([FromBody]ExerciseSetDTO exerciseSetDTO)
+        {
+            var result = await _woRoutineService.AddSet(exerciseSetDTO);
+            if (result != null)
+            {
+                return Ok(result);
+            }
+            return BadRequest("Could Not Add Set");
+        }
+
+        [HttpDelete("deleteset/{Id}")]
+        [Authorize(Policy = "RequireCoachRole")]
+        public async Task<IActionResult> DeleteSet(long Id)
+        {
+            var result = await _woRoutineService.DeleteSet(Id);
+
+            return Ok(new { Deleted = result });
+
         }
     }
 }
