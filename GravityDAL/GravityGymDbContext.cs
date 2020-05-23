@@ -34,12 +34,12 @@ namespace GravityDAL
 
         public DbSet<GymSessionSchedule> GymSessionsSchedule { get; set; }
         public DbSet<UsefulLink> UsefulLinks { get; set; }
-        public DbSet<OurTeamMember> OurTeamMembers { get; set; }
+        public DbSet<TeamMember> TeamMembers { get; set; }
         public DbSet<PersonalInfo>  PersonalInfos { get; set; }
         public DbSet<AppUserCoach> AppUserCoaches { get; set; }
         public DbSet<ExerciseTemplate> ExerciseTemplates { get; set; }
         public DbSet<Muscle> Muscles { get; set; }
-        public DbSet<WoRoutine> WoRoutines  { get; set; }
+        public DbSet<Routine> Routines  { get; set; }
         
 
         private void ApplyIdentityMapConfiguration(ModelBuilder modelBuilder)

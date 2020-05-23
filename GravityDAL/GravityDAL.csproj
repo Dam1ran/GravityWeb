@@ -183,6 +183,14 @@
     <Compile Remove="Migrations\20200504085611_twentieth.Designer.cs" />
     <Compile Remove="Migrations\20200504102740_twentieth.cs" />
     <Compile Remove="Migrations\20200504102740_twentieth.Designer.cs" />
+    <Compile Remove="Migrations\20200508100025_renamed WoRoutine.cs" />
+    <Compile Remove="Migrations\20200508100025_renamed WoRoutine.Designer.cs" />
+    <Compile Remove="Migrations\20200508100212_renamed WoRoutine.cs" />
+    <Compile Remove="Migrations\20200508100212_renamed WoRoutine.Designer.cs" />
+    <Compile Remove="Migrations\20200508102957_test.cs" />
+    <Compile Remove="Migrations\20200508102957_test.Designer.cs" />
+    <Compile Remove="Migrations\20200508150738_test.cs" />
+    <Compile Remove="Migrations\20200508150738_test.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>

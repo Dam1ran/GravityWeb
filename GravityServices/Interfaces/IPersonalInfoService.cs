@@ -5,7 +5,7 @@ namespace GravityServices.Interfaces
 {
     public interface IPersonalInfoService
     {
-        Task<PersonalInfoDTO> GetByUserId(long Id);
-        Task<PersonalInfoDTO> SavePersonalInfo(PersonalInfoDTO personalInfoDTO,long UserId);
+        Task<PersonalInfoDTO> GetByUserIdAsync(long Id);
+        Task<PersonalInfoDTO> SavePersonalInfoAsync(PersonalInfoDTO personalInfoDTO,long UserId);
     }
 }

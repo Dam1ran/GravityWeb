@@ -2,11 +2,11 @@ using AutoMapper;
 using Domain.Auth;
 using Domain.Entities;
 using GravityDAL;
-using GravityDAL.Implementations;
+using GravityDAL.Repositories;
 using GravityDAL.Interfaces;
-using GravityServices.Implementations;
+using GravityServices.Services;
 using GravityServices.Interfaces;
-using GravityWeb.Helpers;
+using GravityWeb.Models;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -21,7 +21,7 @@ using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.Swagger;
 using System;
 using System.Text;
-using SwaggerOptions = GravityWeb.Helpers.SwaggerOptions;
+using GravityWeb.Middlewares;
 
 namespace GravityWeb
 {
@@ -37,60 +37,122 @@ namespace GravityWeb
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            AddDbContext(services);
 
+            ConfigureIdentity(services);                        
 
-            services.AddDbContext<GravityGymDbContext>(optionBuilder =>
+            services.AddControllers();            
+
+            ConfigureMyServices(services);
+
+            ConfigureRepositories(services);
+
+            ConfigureAuthentication(services);
+
+            ConfigureAuthorization(services);
+
+            services.AddAutoMapper(typeof(Startup));
+
+            AddSwagger(services);
+
+        }
+
+        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        {            
+            
+            if (env.IsDevelopment())
             {
-                optionBuilder.UseSqlServer(Configuration.GetConnectionString("GravityGymConnectionString"));
+               app.UseDeveloperExceptionPage();
+            }
+            else
+            {
+                app.UseMiddleware<ErrorHandlingMiddleware>();
+                //app.UseHsts();
+            }
+
+            var swaggerOptions = new SwaggerOptionsModel();
+            Configuration.GetSection(nameof(SwaggerOptions)).Bind(swaggerOptions);
+
+            app.UseSwagger(opt =>
+            {
+                opt.RouteTemplate = swaggerOptions.JsonRoute;
             });
 
-
-            services.AddIdentity<ApplicationUser, Role>(options=>
+            app.UseSwaggerUI(opt=> 
             {
-                options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(5);
-                options.Lockout.MaxFailedAccessAttempts = 5;
-                options.Lockout.AllowedForNewUsers = true;
-                options.User.RequireUniqueEmail = true;
+                opt.SwaggerEndpoint(swaggerOptions.UIEndpoint,swaggerOptions.Description);
+            });
 
-            }).AddEntityFrameworkStores<GravityGymDbContext>().AddDefaultTokenProviders();
+            app.UseHttpsRedirection();
 
+            app.UseAuthentication();
 
-            //services.AddCors(options=>options.AddPolicy("Cors",builder=>
-            //    builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader()));
+            app.UseRouting();
 
+            app.UseAuthorization();
 
-            services.AddControllers();
+            app.UseStaticFiles();
 
-            //helpers
-            services.AddScoped<IFileSaver,FileSaver>();
-            services.AddScoped<IGetFBImageUrlsService, GetFBImageUrlsService>();
+            app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapControllers();
+            });
 
-
-            //repos and services
+            app.Run(async (context) => { await context.Response.WriteAsync("Can't find anything");});
+        }
+               
+        private void AddSwagger(IServiceCollection services)
+        {
+            services.AddSwaggerGen(g =>
+            {
+                g.SwaggerDoc("v1", new OpenApiInfo { Title = "Gravity Site API", Version = "v1" });
+            });
+        }
+        private void ConfigureRepositories(IServiceCollection services)
+        {
             services.AddScoped<IUsefulLinksRepository, UsefulLinksRepository>();
             services.AddScoped<IGymSessionScheduleRepository, GymSessionScheduleRepository>();
-            services.AddScoped<IGymSessionScheduleService, GymSessionScheduleService>();
-            services.AddScoped<IOurTeamMemberRepository, OurTeamMemberRepository>();
-            services.AddScoped<IOurTeamMemberService, OurTeamMemberService>();
+            services.AddScoped<ITeamMemberRepository, TeamMemberRepository>();
             services.AddScoped<IPersonalInfoRepository, PersonalInfoRepository>();
-            services.AddScoped<IPersonalInfoService, PersonalInfoService>();
+            services.AddScoped<IAppUserCoachRepository, AppUserCoachRepository>();
+
             services.AddScoped<IExerciseTemplateRepository, ExerciseTemplateRepository>();
             services.AddScoped<IMuscleRepository, MuscleRepository>();
-            services.AddScoped<IAppUserCoachRepository, AppUserCoachRepository>();
-            services.AddScoped<IApplicationUserService, ApplicationUserService>();
-            services.AddScoped<IExerciseTemplateService, ExerciseTemplateService>();
-            services.AddScoped<IWoRoutineRepository, WoRoutineRepository>();
-            services.AddScoped<IWoRoutineService, WoRoutineService>();
+
+            services.AddScoped<IRoutineRepository, RoutineRepository>();
             services.AddScoped<IWorkoutRepository, WorkoutRepository>();
             services.AddScoped<IExerciseRepository, ExerciseRepository>();
-            services.AddScoped<IExerciseSetRepository, ExerciseSetRepository>();
+            services.AddScoped<ISetRepository, SetRepository>();
+        }
+        private void ConfigureMyServices(IServiceCollection services)
+        {
+            services.AddScoped<IGymSessionScheduleService, GymSessionScheduleService>();
+            services.AddScoped<ITeamMemberService, TeamMemberService>();
+            services.AddScoped<IApplicationUserService, ApplicationUserService>();
+            services.AddScoped<IPersonalInfoService, PersonalInfoService>();
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<ICoachService, CoachService>();
-
-
-            //services.AddScoped<IRepository<GymSessionSchedule>, Repository<GymSessionSchedule>>();
-
-
+            services.AddScoped<IExerciseTemplateService, ExerciseTemplateService>();
+            services.AddScoped<IRoutineService, RoutineService>();
+            services.AddScoped<IWorkoutService, WorkoutService>();
+            services.AddScoped<IExerciseService, ExerciseService>();
+            services.AddScoped<ISetService, SetService>();
+            //helpers
+            services.AddScoped<IFileSaver, FileSaver>();
+            services.AddScoped<IGetFBImageUrlsService, GetFBImageUrlsService>();
+        }
+        private void ConfigureAuthorization(IServiceCollection services)
+        {
+            services.AddAuthorization(options =>
+            {
+                options.AddPolicy("RequireLoggedIn", policy => policy.RequireRole("Client", "Coach", "Manager", "Admin").RequireAuthenticatedUser());
+                options.AddPolicy("RequireAdminRole", policy => policy.RequireRole("Admin").RequireAuthenticatedUser());
+                options.AddPolicy("RequireCoachRole", policy => policy.RequireRole("Coach").RequireAuthenticatedUser());
+            });
+        }
+        private void ConfigureAuthentication(IServiceCollection services)
+        {
             //configure strongly typed settings objects
             var appSettingsSection = Configuration.GetSection("AppSettings");
             services.Configure<AppSettings>(appSettingsSection);
@@ -115,68 +177,24 @@ namespace GravityWeb
                     IssuerSigningKey = new SymmetricSecurityKey(key)
                 };
             });
-
-            services.AddAuthorization(options=>
-            {
-                options.AddPolicy("RequireLoggedIn",  policy => policy.RequireRole("Client","Coach","Manager","Admin").RequireAuthenticatedUser());
-                options.AddPolicy("RequireAdminRole", policy => policy.RequireRole("Admin").RequireAuthenticatedUser());
-                options.AddPolicy("RequireCoachRole", policy => policy.RequireRole("Coach").RequireAuthenticatedUser());
-            });
-
-            services.AddAutoMapper(typeof(Startup));
-
-            services.AddSwaggerGen(g=> 
-            {
-                g.SwaggerDoc("v1", new OpenApiInfo { Title = "Gravity Site API", Version = "v1" });
-            });
-
         }
-
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        private void AddDbContext(IServiceCollection services)
         {
-            
-            
-            if (env.IsDevelopment())
+            services.AddDbContext<GravityGymDbContext>(optionBuilder =>
             {
-                app.UseDeveloperExceptionPage();
-            }
-            else
-            {
-                app.UseHsts();
-            }
-
-            var swaggerOptions = new SwaggerOptions();
-            Configuration.GetSection(nameof(SwaggerOptions)).Bind(swaggerOptions);
-
-            app.UseSwagger(opt =>
-            {
-                opt.RouteTemplate = swaggerOptions.JsonRoute;
+                optionBuilder.UseSqlServer(Configuration.GetConnectionString("GravityGymConnectionString"));
             });
-
-            app.UseSwaggerUI(opt=> 
+        }
+        private void ConfigureIdentity(IServiceCollection services)
+        {
+            services.AddIdentity<ApplicationUser, Role>(options =>
             {
-                opt.SwaggerEndpoint(swaggerOptions.UIEndpoint,swaggerOptions.Description);
-            });
+                options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(5);
+                options.Lockout.MaxFailedAccessAttempts = 5;
+                options.Lockout.AllowedForNewUsers = true;
+                options.User.RequireUniqueEmail = true;
 
-            //app.UseCors("Cors");
-
-            app.UseHttpsRedirection();
-
-            app.UseAuthentication();
-
-            app.UseRouting();
-
-            app.UseAuthorization();
-
-            app.UseStaticFiles();
-
-            app.UseEndpoints(endpoints =>
-            {
-                endpoints.MapControllers();
-            });
-
-            app.Run(async (context) => { await context.Response.WriteAsync("Can't find anything");});
+            }).AddEntityFrameworkStores<GravityGymDbContext>().AddDefaultTokenProviders();
         }
     }
 }

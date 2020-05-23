@@ -11,10 +11,10 @@ namespace GravityDAL.Interfaces
     public interface IRepository<T> where T : BaseEntity
     {
         Task<IList<T>> GetAllAsync();
-        Task<PaginatedResult<TDto>> GetPagedData<TDto>(PaginatedRequest  paginatedRequest) where TDto : class;
+        Task<PaginatedResult<TDto>> GetPagedDataAsync<TDto>(PaginatedRequest  paginatedRequest) where TDto : class;
         Task<T> GetByIdAsync(long id);
-        Task<T> GetByIdWithInclude(long id, params Expression<Func<T, object>> [] includeProperties);
-        IQueryable<T> GetAllWithInclude(params Expression<Func<T, object>> [] includeProperties);
+        Task<T> GetByIdWithIncludeAsync(long id, params Expression<Func<T, object>> [] includeProperties);
+        IQueryable<T> GetAllWithIncludeAsync(params Expression<Func<T, object>> [] includeProperties);
         Task<T> AddAsync(T entity);
         Task<T> UpdateAsync(T entity);
         Task<T> DeleteAsync(T entity);

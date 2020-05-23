@@ -5,6 +5,6 @@ namespace GravityServices.Interfaces
 {
     public interface IGetFBImageUrlsService
     {
-        public Task<GalleryImagesDTO> GetImagesUrl(string nav,string token);
+        Task<GalleryImagesDTO> GetImagesUrlAsync(string nav,string token);
     }
 }

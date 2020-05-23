@@ -5,6 +5,6 @@ namespace GravityServices.Interfaces
 {
     public interface IFileSaver
     {
-        Task<string> Save(string envString, string uploadFolderName, IFormFile file);
+        Task<string> SaveAsync(string envString, string uploadFolderName, IFormFile file);
     }
 }

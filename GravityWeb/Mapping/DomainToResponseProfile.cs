@@ -1,9 +1,9 @@
 ﻿using AutoMapper;
 using Domain.Entities;
 using Domain.Entities.WorkoutEntities;
-using GravityDAL.DTO;
+using GravityDAL.Models;
 using GravityDTO;
-using GravityDTO.WORoutine;
+using GravityDTO.WorkoutModels;
 using System.Linq;
 
 namespace GravityWeb.Mapping
@@ -14,12 +14,13 @@ namespace GravityWeb.Mapping
         {
             CreateMap<PersonalInfo, PersonalInfoDTO>();
             CreateMap<PersonalInfoDTO, PersonalInfo>();//.ForMember(dest=>dest.,act=>act.Ignore());
-            CreateMap<WoRoutine, WoRoutineDTO>();
+            CreateMap<Routine, RoutineDTO>();
             CreateMap<Workout, WorkoutDTO>();
             CreateMap<WorkoutDTO, Workout>();
             CreateMap<Exercise, ExerciseDTO>()
                 .ForMember(x=>x.Name, y=>y.MapFrom(z=>z.ExerciseTemplate.Name));
-            CreateMap<ExerciseSet, ExerciseSetDTO>();
+            CreateMap<Set, SetDTO>();
+            CreateMap<SetDTO, Set>();
 
             CreateMap<ExerciseTemplate, ExerciseTemplateDTO>()
                 .ForMember(x=>x.PrimaryMuscle, y=>y.MapFrom(z=>z.PrimaryMuscle.Name))
@@ -29,7 +30,7 @@ namespace GravityWeb.Mapping
                 .ForMember(x=>x.PrimaryMuscle, act=>act.Ignore())
                 .ForMember(x=>x.SecondaryMuscle, act=>act.Ignore());
 
-            CreateMap<ApplicationUser, ApplicationUserDTO>()
+            CreateMap<ApplicationUser, ApplicationUserModel>()
                 .ForMember(x=>x.FullName, y=>y.MapFrom(z=>z.PersonalInfo.FirstName+" "+z.PersonalInfo.LastName))
                 .ForMember(x => x.CoachFullName, y => y.MapFrom(z => z.Coach.Coach.PersonalInfo.FirstName+ " " + z.Coach.Coach.PersonalInfo.LastName))
                 .ForMember(x => x.coachId, y => y.MapFrom(z => z.Coach.Coach.Id))

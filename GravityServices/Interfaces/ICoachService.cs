@@ -8,9 +8,9 @@ namespace GravityServices.Interfaces
     public interface ICoachService
     {
         Task<IList<CoachDTO>> GetCoachesAsync();
-        Task<ApplicationUser> AddPersonalClient(string coachEmail, string clientEmail);
-        Task<IList<ClientDTO>> GetPersonalClients(string coachEmail);
-        Task<bool> RemoveAllPersonalClientsFromCoach(string coachEmail);
-        Task<bool> RemovePersonalClientFromCoach(string coachEmail, string clientEmail);
+        Task<ApplicationUser> AddPersonalClientAsync(string coachEmail, string clientEmail);
+        Task<IList<ClientDTO>> GetPersonalClientsAsync(string coachEmail);
+        Task RemoveAllPersonalClientsFromCoachAsync(string coachEmail);
+        Task<AppUserCoach> RemovePersonalClientFromCoachAsync(string coachEmail, string clientEmail);
     }
 }

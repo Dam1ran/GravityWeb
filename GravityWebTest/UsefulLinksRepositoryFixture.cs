@@ -1,8 +1,8 @@
 using AutoMapper;
 using Domain.Entities;
 using GravityDAL;
-using GravityDAL.Implementations;
-using GravityServices.Implementations;
+using GravityDAL.Repositories;
+using GravityServices.Services;
 using Microsoft.EntityFrameworkCore;
 using Moq;
 using NUnit.Framework;

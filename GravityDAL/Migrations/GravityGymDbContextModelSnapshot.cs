@@ -426,46 +426,6 @@ namespace GravityDAL.Migrations
                         });
                 });
 
-            modelBuilder.Entity("Domain.Entities.OurTeamMember", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("Activity")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(20)")
-                        .HasMaxLength(20);
-
-                    b.Property<string>("AvatarUrl")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Description")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(2000)")
-                        .HasMaxLength(2000);
-
-                    b.Property<string>("FullName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(30)")
-                        .HasMaxLength(30);
-
-                    b.Property<string>("ImageUrl")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Moto")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(200)")
-                        .HasMaxLength(200);
-
-                    b.HasKey("Id");
-
-                    b.ToTable("OurTeamMembers");
-                });
-
             modelBuilder.Entity("Domain.Entities.PersonalInfo", b =>
                 {
                     b.Property<long>("Id")
@@ -523,6 +483,46 @@ namespace GravityDAL.Migrations
                     b.ToTable("PersonalInfos");
                 });
 
+            modelBuilder.Entity("Domain.Entities.TeamMember", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Activity")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(20)")
+                        .HasMaxLength(20);
+
+                    b.Property<string>("AvatarUrl")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(2000)")
+                        .HasMaxLength(2000);
+
+                    b.Property<string>("FullName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(30)")
+                        .HasMaxLength(30);
+
+                    b.Property<string>("ImageUrl")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Moto")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(200)")
+                        .HasMaxLength(200);
+
+                    b.HasKey("Id");
+
+                    b.ToTable("TeamMembers");
+                });
+
             modelBuilder.Entity("Domain.Entities.UsefulLink", b =>
                 {
                     b.Property<long>("Id")
@@ -569,7 +569,29 @@ namespace GravityDAL.Migrations
                     b.ToTable("Exercise");
                 });
 
-            modelBuilder.Entity("Domain.Entities.WorkoutEntities.ExerciseSet", b =>
+            modelBuilder.Entity("Domain.Entities.WorkoutEntities.Routine", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(1000)")
+                        .HasMaxLength(1000);
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(255)")
+                        .HasMaxLength(255);
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Routines");
+                });
+
+            modelBuilder.Entity("Domain.Entities.WorkoutEntities.Set", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
@@ -598,29 +620,7 @@ namespace GravityDAL.Migrations
 
                     b.HasIndex("ExerciseId");
 
-                    b.ToTable("ExerciseSet");
-                });
-
-            modelBuilder.Entity("Domain.Entities.WorkoutEntities.WoRoutine", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("Description")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(1000)")
-                        .HasMaxLength(1000);
-
-                    b.Property<string>("Title")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(255)")
-                        .HasMaxLength(255);
-
-                    b.HasKey("Id");
-
-                    b.ToTable("WoRoutines");
+                    b.ToTable("Set");
                 });
 
             modelBuilder.Entity("Domain.Entities.WorkoutEntities.Workout", b =>
@@ -636,7 +636,7 @@ namespace GravityDAL.Migrations
                     b.Property<int>("Order")
                         .HasColumnType("int");
 
-                    b.Property<long>("WoRoutineId")
+                    b.Property<long>("RoutineId")
                         .HasColumnType("bigint");
 
                     b.Property<string>("WorkoutComments")
@@ -648,7 +648,7 @@ namespace GravityDAL.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("WoRoutineId");
+                    b.HasIndex("RoutineId");
 
                     b.ToTable("Workout");
                 });
@@ -753,10 +753,10 @@ namespace GravityDAL.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Domain.Entities.WorkoutEntities.ExerciseSet", b =>
+            modelBuilder.Entity("Domain.Entities.WorkoutEntities.Set", b =>
                 {
                     b.HasOne("Domain.Entities.WorkoutEntities.Exercise", null)
-                        .WithMany("ExerciseSets")
+                        .WithMany("Sets")
                         .HasForeignKey("ExerciseId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -764,9 +764,9 @@ namespace GravityDAL.Migrations
 
             modelBuilder.Entity("Domain.Entities.WorkoutEntities.Workout", b =>
                 {
-                    b.HasOne("Domain.Entities.WorkoutEntities.WoRoutine", null)
+                    b.HasOne("Domain.Entities.WorkoutEntities.Routine", null)
                         .WithMany("Workouts")
-                        .HasForeignKey("WoRoutineId")
+                        .HasForeignKey("RoutineId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });

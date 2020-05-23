@@ -5,7 +5,7 @@ namespace GravityDAL.Interfaces
 {
     public interface IAppUserCoachRepository : IRepository<AppUserCoach>
     {
-        Task<bool> RemovePersonalClientFromCoach(long coachId, long clientId);
-        Task<bool> RemoveAllPersonalClientsFromCoach(long coachId);
+        Task<AppUserCoach> RemovePersonalClientFromCoachAsync(long coachId, long clientId);
+        Task RemoveAllPersonalClientsFromCoachAsync(long coachId);
     }
 }

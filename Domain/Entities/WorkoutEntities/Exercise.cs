@@ -11,7 +11,7 @@ namespace Domain.Entities.WorkoutEntities
         public ExerciseTemplate ExerciseTemplate { get; set; }
         public Workout Workout { get; set; }
         public long WorkoutId { get; set; }
-        public IList<ExerciseSet> ExerciseSets { get; set; }
+        public IList<Set> Sets { get; set; }
 
     }
 }

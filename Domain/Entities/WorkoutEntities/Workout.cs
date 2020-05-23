@@ -15,8 +15,8 @@ namespace Domain.Entities.WorkoutEntities
         public string WorkoutComments { get; set; }
         public virtual IList<Exercise> Exercises { get; set; }
         public DateTime? WorkoutDate { get; set; }
-        [ForeignKey(nameof(WoRoutine))]
-        public long WoRoutineId { get; set; }        
+        [ForeignKey(nameof(Routine))]
+        public long RoutineId { get; set; }
 
     }
 }

@@ -6,8 +6,8 @@ namespace GravityDAL.Interfaces
 {
     public interface IExerciseRepository : IRepository<Exercise>
     {
-        Task<IList<Exercise>> GetByWorkoutId(long Id);
-        Task<Exercise> GetLastWithOrderInferiorTo(long workoutId, int order);
-        Task<Exercise> GetFirstWithOrderSuperiorTo(long workoutId, int order);
+        Task<IList<Exercise>> GetByWorkoutIdAsync(long Id);
+        Task<Exercise> GetLastWithOrderInferiorToAsync(long workoutId, int order);
+        Task<Exercise> GetFirstWithOrderSuperiorToAsync(long workoutId, int order);
     }
 }

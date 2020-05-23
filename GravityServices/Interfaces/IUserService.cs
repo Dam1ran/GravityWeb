@@ -4,7 +4,6 @@ namespace GravityServices.Interfaces
 {
     public interface IUserService
     {        
-        Task<bool> UpdateRole(string userEmail, long roleId);
-
+        Task<bool> UpdateRoleAsync(string userEmail, long roleId);
     }
 }

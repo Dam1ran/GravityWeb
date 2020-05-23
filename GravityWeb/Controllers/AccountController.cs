@@ -1,6 +1,6 @@
 ﻿using Domain.Entities;
 using GravityDTO;
-using GravityWeb.Helpers;
+using GravityWeb.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
